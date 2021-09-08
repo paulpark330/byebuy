@@ -26,8 +26,8 @@ app.use(staticMiddleware);
 app.use(errorMiddleware);
 
 app.post('/api/home', (req, res, next) => {
-  const { userId } = req.user;
-  const { title, category, price, description, location } = req.body;
+  // const { userId } = req.user;
+  const { userId, title, category, price, description, location } = req.body;
   if (!title || !category || typeof price !== 'number') {
     throw new ClientError(400, 'title (string), category (string), and price (number) are required fields');
   }
