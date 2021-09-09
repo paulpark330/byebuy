@@ -10,7 +10,8 @@ module.exports = {
   },
   entry: clientPath,
   output: {
-    path: serverPublicPath
+    path: serverPublicPath,
+    publicPath: '/'
   },
   module: {
     rules: [
@@ -20,16 +21,19 @@ module.exports = {
         use: {
           loader: 'babel-loader',
           options: {
-            plugins: [
-              '@babel/plugin-transform-react-jsx'
-            ]
+            plugins: ['@babel/plugin-transform-react-jsx']
           }
         }
+      },
+      {
+        test: /\.css$/i,
+        use: ['style-loader', 'css-loader']
       }
     ]
   },
   devtool: 'source-map',
   devServer: {
+    historyApiFallback: true,
     host: '0.0.0.0',
     port: process.env.DEV_SERVER_PORT,
     publicPath: '/',
