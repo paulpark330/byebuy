@@ -4,6 +4,7 @@ const errorMiddleware = require('./error-middleware');
 const staticMiddleware = require('./static-middleware');
 const pg = require('pg');
 const ClientError = require('./client-error');
+const authorizationMiddleware = require('./authorization-middleware');
 // const argon2 = require('argon2');
 // const jwt = require('jsonwebtoken');
 // const ClientError = require('./client-error');
@@ -26,10 +27,13 @@ app.use(staticMiddleware);
 app.use(errorMiddleware);
 
 app.post('/api/home', (req, res, next) => {
-  const { userId } = req.user;
+  const { userId } = req.body;
   const { title, category, price, description, location } = req.body;
-  if (!title || !category || typeof price !== 'number') {
-    throw new ClientError(400, 'title (string), category (string), and price (number) are required fields');
+  if (!title || !category) {
+    throw new ClientError(
+      400,
+      'title (string), category (string), and price (number) are required fields'
+    );
   }
   const sql = `
     insert into "posts" ("userId", "title", "category", "price", "description", "location")

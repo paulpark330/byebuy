@@ -1,18 +1,16 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import Typography from '@material-ui/core/Typography';
+
 import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
 import FormControl from '@material-ui/core/FormControl';
-import FormLabel from '@material-ui/core/FormLabel';
+
 import NumberFormat from 'react-number-format';
 import {
   makeStyles,
   Select,
   InputLabel,
-  MenuItem,
-  OutlinedInput,
-  InputAdornment
+  MenuItem
 } from '@material-ui/core';
 import TextField from '@material-ui/core/TextField';
 import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
@@ -64,6 +62,29 @@ export default function NewPost() {
     price: '',
     description: ''
   });
+  const [location, setLocation] = useState('');
+  const [userId, setUserId] = useState(0);
+
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition(position => {
+      const lat = position.coords.latitude;
+      const long = position.coords.longitude;
+      const KEY = 'AIzaSyDmADdAoHWHYXYsnAe1YAVaPgnlR6Fohow';
+      let address = '';
+      fetch(
+        `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${long}&key=${KEY}`
+      )
+        .then(res => res.json())
+        .then(result => {
+          address = result.results[4].formatted_address;
+          setLocation(address);
+        });
+    });
+  });
+
+  const [titleError, setTitleError] = useState(false);
+  const [categoryError, setCategoryError] = useState(false);
+  const [priceError, setPriceError] = useState(false);
 
   const handleChange = prop => event => {
     setFormValues({ ...formValues, [prop]: event.target.value });
@@ -71,9 +92,39 @@ export default function NewPost() {
 
   const handleSubmit = e => {
     e.preventDefault();
+    setTitleError(false);
+    setCategoryError(false);
+    setPriceError(false);
+
+    if (formValues.title === '') {
+      setTitleError(true);
+    }
+
+    if (formValues.category === '') {
+      setCategoryError(true);
+    }
+
+    if (formValues.price === '') {
+      setPriceError(true);
+    }
 
     if (formValues.title && formValues.category && formValues.price) {
-      console.log(formValues);
+      const req = {
+        userId,
+        title: formValues.title,
+        category: formValues.category,
+        price: formValues.price,
+        description: formValues.description,
+        location
+      };
+      const init = {
+        method: 'POST',
+        headers: { 'Content-type': 'application/json' },
+        body: JSON.stringify(req)
+      };
+      fetch('/api/home', init)
+        .then(res => res.json())
+        .then(result => console.log(result));
     }
   };
 
@@ -88,12 +139,14 @@ export default function NewPost() {
           onChange={handleChange('title')}
           fullWidth
           required
+          error={titleError}
         />
         <FormControl
           variant="outlined"
           className={classes.field}
           fullWidth
           required
+          error={categoryError}
         >
           <InputLabel id="select-category">Category</InputLabel>
           <Select
@@ -130,6 +183,7 @@ export default function NewPost() {
           }}
           fullWidth
           required
+          error={priceError}
         />
         <TextField
           className={classes.field}
