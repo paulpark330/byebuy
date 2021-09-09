@@ -4,7 +4,7 @@ import Home from './pages/home';
 import NewPost from './pages/new-post';
 import BottomNavBar from './components/bottom-navigation';
 import { createTheme, ThemeProvider } from '@material-ui/core';
-import { lightGreen } from '@material-ui/core/colors';
+import Header from './components/header';
 // import Layout from './components/Layout';
 
 const theme = createTheme({
@@ -12,7 +12,9 @@ const theme = createTheme({
     primary: {
       main: '#6EB289'
     },
-    secondary: lightGreen
+    secondary: {
+      main: '#427d5a'
+    }
   },
   typography: {
     fontFamily: 'Roboto',
@@ -29,6 +31,7 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <Router>
+        <Header />
         <Switch>
           <Route exact path="/">
             <Home />
