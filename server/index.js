@@ -8,7 +8,7 @@ const ClientError = require('./client-error');
 // const argon2 = require('argon2');
 // const jwt = require('jsonwebtoken');
 // const ClientError = require('./client-error');
-// const uploadsMiddleware = require('./uploads-middleware');
+const uploadsMiddleware = require('./uploads-middleware');
 
 const jsonMiddleware = express.json();
 
@@ -27,10 +27,9 @@ app.use(staticMiddleware);
 
 app.use(errorMiddleware);
 
-app.post('/api/home', (req, res, next) => {
-  console.log(req.body);
-  const { userId } = req.body;
-  const { url, title, category, price, description, location } = req.body;
+app.post('/api/new-post', uploadsMiddleware, (req, res, next) => {
+  const url = `/images/${req.file.filename}`;
+  const { userId, title, category, price, description, location } = req.body;
   if (!title || !category) {
     throw new ClientError(
       400,
@@ -38,11 +37,16 @@ app.post('/api/home', (req, res, next) => {
     );
   }
   const sql = `
-    insert into "posts" ("userId", "url", "title", "category", "price", "description", "location")
-    values ($1, $2, $3, $4, $5, $6, $7)
+    with "insertedPost" as (
+      insert into "posts" ("userId", "title", "category", "price", "description", "location")
+        values ($1, $2, $3, $4, $5, $6)
+      returning *
+    )
+    insert into "pictures" ("postId", "url")
+      values ((select "postId" from "insertedPost"), $7)
     returning *
   `;
-  const params = [userId, url, title, category, price, description, location];
+  const params = [userId, title, category, price, description, location, url];
   db.query(sql, params)
     .then(result => {
       const [newPost] = result.rows;

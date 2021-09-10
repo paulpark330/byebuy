@@ -10,7 +10,6 @@ create schema "public";
 CREATE TABLE "public"."posts" (
 	"postId" serial NOT NULL,
 	"userId" integer NOT NULL,
-	"url" TEXT,
 	"title" TEXT NOT NULL,
 	"category" TEXT NOT NULL,
 	"price" integer NOT NULL,
@@ -59,7 +58,7 @@ CREATE TABLE "public"."favorites" (
 CREATE TABLE "public"."pictures" (
 	"pictureId" serial NOT NULL,
 	"postId" serial NOT NULL,
-	"userId" serial NOT NULL,
+  "url" TEXT,
 	CONSTRAINT "pictures_pk" PRIMARY KEY ("pictureId")
 ) WITH (
   OIDS=FALSE
@@ -70,4 +69,3 @@ ALTER TABLE "posts" ADD CONSTRAINT "posts_fk0" FOREIGN KEY ("userId") REFERENCES
 ALTER TABLE "favorites" ADD CONSTRAINT "favorites_fk0" FOREIGN KEY ("userId") REFERENCES "users"("userId");
 ALTER TABLE "favorites" ADD CONSTRAINT "favorites_fk1" FOREIGN KEY ("postId") REFERENCES "posts"("postId");
 ALTER TABLE "pictures" ADD CONSTRAINT "pictures_fk0" FOREIGN KEY ("postId") REFERENCES "posts"("postId");
-ALTER TABLE "pictures" ADD CONSTRAINT "pictures_fk1" FOREIGN KEY ("userId") REFERENCES "users"("userId");

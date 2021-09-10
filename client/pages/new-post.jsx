@@ -1,12 +1,19 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import PropTypes from 'prop-types';
-
+import AppContext from '../lib/app-context';
 import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
 import FormControl from '@material-ui/core/FormControl';
 import { DropzoneArea } from 'material-ui-dropzone';
 import NumberFormat from 'react-number-format';
-import { makeStyles, Select, InputLabel, MenuItem, createTheme, ThemeProvider } from '@material-ui/core';
+import {
+  makeStyles,
+  Select,
+  InputLabel,
+  MenuItem,
+  createTheme,
+  ThemeProvider
+} from '@material-ui/core';
 import TextField from '@material-ui/core/TextField';
 import { AddAPhoto } from '@material-ui/icons';
 import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
@@ -54,7 +61,8 @@ const theme = createTheme({
         maxHeight: 80,
         objectFit: 'cover',
         boxShadow: 'none',
-        padding: 4
+        padding: 4,
+        borderRadius: 10
       }
     }
   }
@@ -97,8 +105,8 @@ export default function NewPost() {
     description: ''
   });
   const [location, setLocation] = useState('');
-  const [userId, setUserId] = useState(0);
   const [files, setFiles] = useState([]);
+  const userId = useContext(AppContext);
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(position => {
@@ -129,11 +137,25 @@ export default function NewPost() {
     setFiles(files);
   };
 
+  const resetForm = () => {
+    setFormValues({
+      title: '',
+      category: '',
+      price: '',
+      description: ''
+    });
+    setFiles([]);
+  };
+
   const handleSubmit = e => {
-    e.preventDefault();
     setTitleError(false);
     setCategoryError(false);
     setPriceError(false);
+    const newPost = new FormData(event.target);
+    newPost.append('image', files[0]);
+    newPost.append('userId', userId);
+    newPost.append('location', location);
+    newPost.set('price', formValues.price);
 
     if (formValues.title === '') {
       setTitleError(true);
@@ -148,34 +170,38 @@ export default function NewPost() {
     }
 
     if (formValues.title && formValues.category && formValues.price) {
-      const req = {
-        userId,
-        title: formValues.title,
-        category: formValues.category,
-        price: formValues.price,
-        description: formValues.description,
-        location
-      };
       const init = {
         method: 'POST',
-        headers: { 'Content-type': 'application/json' },
-        body: JSON.stringify(req)
+        body: newPost
       };
-      fetch('/api/home', init)
+      fetch('/api/new-post', init)
         .then(res => res.json())
-        .then(result => console.log(result));
+        .then(result => {
+          document.querySelector('#upload-form').reset();
+        })
+        .catch(err => {
+          console.error(err);
+        });
     }
   };
 
   return (
     <Container>
-      <form noValidate autoComplete="off" onSubmit={handleSubmit}>
+      <form
+        id="upload-form"
+        noValidate
+        autoComplete="off"
+        onSubmit={handleSubmit}
+        onReset={resetForm}
+      >
         <ThemeProvider theme={theme}>
           <DropzoneArea
+            showAlerts={false}
+            name="image"
             Icon={AddAPhoto}
             filesLimit={6}
             acceptedFiles={['image/*']}
-            dropzoneText=''
+            dropzoneText=""
             onChange={handleSelectedFiles}
           ></DropzoneArea>
         </ThemeProvider>
@@ -188,6 +214,7 @@ export default function NewPost() {
           fullWidth
           required
           error={titleError}
+          name="title"
         />
         <FormControl
           variant="outlined"
@@ -204,6 +231,7 @@ export default function NewPost() {
             value={formValues.category}
             onChange={handleChange('category')}
             autoWidth
+            name="category"
           >
             <MenuItem value="electronics">Electronics</MenuItem>
             <MenuItem value="furniture">Furniture</MenuItem>
@@ -222,7 +250,7 @@ export default function NewPost() {
         <TextField
           className={classes.field}
           label="Price"
-          name="numberformat"
+          name="price"
           variant="outlined"
           color="primary"
           onChange={handleChange('price')}
@@ -236,6 +264,7 @@ export default function NewPost() {
         <TextField
           className={classes.field}
           label="Item description"
+          name="description"
           variant="outlined"
           color="primary"
           onChange={handleChange('description')}
