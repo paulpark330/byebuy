@@ -4,15 +4,11 @@ import PropTypes from 'prop-types';
 import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
 import FormControl from '@material-ui/core/FormControl';
-
+import { DropzoneArea } from 'material-ui-dropzone';
 import NumberFormat from 'react-number-format';
-import {
-  makeStyles,
-  Select,
-  InputLabel,
-  MenuItem
-} from '@material-ui/core';
+import { makeStyles, Select, InputLabel, MenuItem, createTheme, ThemeProvider } from '@material-ui/core';
 import TextField from '@material-ui/core/TextField';
+import { AddAPhoto } from '@material-ui/icons';
 import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
 
 const useStyles = makeStyles({
@@ -23,6 +19,44 @@ const useStyles = makeStyles({
   },
   button: {
     color: 'white'
+  }
+});
+
+const theme = createTheme({
+  overrides: {
+    MuiDropzoneArea: {
+      root: {
+        display: 'flex',
+        minHeight: 60
+      },
+      textContainer: {
+        textAlign: 'start',
+        display: 'flex',
+        alignItems: 'center'
+      },
+      icon: {
+        width: 30,
+        height: 30,
+        margin: 20
+      }
+    },
+    MuiDropzonePreviewList: {
+      root: {
+        display: 'inline',
+        margin: 0
+      },
+      imageContainer: {
+        display: 'inline',
+        padding: '4px !important'
+      },
+      image: {
+        maxWidth: 80,
+        maxHeight: 80,
+        objectFit: 'cover',
+        boxShadow: 'none',
+        padding: 4
+      }
+    }
   }
 });
 
@@ -64,6 +98,7 @@ export default function NewPost() {
   });
   const [location, setLocation] = useState('');
   const [userId, setUserId] = useState(0);
+  const [files, setFiles] = useState([]);
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(position => {
@@ -86,8 +121,12 @@ export default function NewPost() {
   const [categoryError, setCategoryError] = useState(false);
   const [priceError, setPriceError] = useState(false);
 
-  const handleChange = prop => event => {
-    setFormValues({ ...formValues, [prop]: event.target.value });
+  const handleChange = prop => e => {
+    setFormValues({ ...formValues, [prop]: e.target.value });
+  };
+
+  const handleSelectedFiles = files => {
+    setFiles(files);
   };
 
   const handleSubmit = e => {
@@ -131,6 +170,15 @@ export default function NewPost() {
   return (
     <Container>
       <form noValidate autoComplete="off" onSubmit={handleSubmit}>
+        <ThemeProvider theme={theme}>
+          <DropzoneArea
+            Icon={AddAPhoto}
+            filesLimit={6}
+            acceptedFiles={['image/*']}
+            dropzoneText=''
+            onChange={handleSelectedFiles}
+          ></DropzoneArea>
+        </ThemeProvider>
         <TextField
           className={classes.field}
           label="Post title"

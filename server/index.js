@@ -4,12 +4,13 @@ const errorMiddleware = require('./error-middleware');
 const staticMiddleware = require('./static-middleware');
 const pg = require('pg');
 const ClientError = require('./client-error');
-const authorizationMiddleware = require('./authorization-middleware');
+// const authorizationMiddleware = require('./authorization-middleware');
 // const argon2 = require('argon2');
 // const jwt = require('jsonwebtoken');
 // const ClientError = require('./client-error');
-const jsonMiddleware = express.json();
 // const uploadsMiddleware = require('./uploads-middleware');
+
+const jsonMiddleware = express.json();
 
 const db = new pg.Pool({
   connectionString: process.env.DATABASE_URL,
@@ -27,8 +28,9 @@ app.use(staticMiddleware);
 app.use(errorMiddleware);
 
 app.post('/api/home', (req, res, next) => {
+  console.log(req.body);
   const { userId } = req.body;
-  const { title, category, price, description, location } = req.body;
+  const { url, title, category, price, description, location } = req.body;
   if (!title || !category) {
     throw new ClientError(
       400,
@@ -36,11 +38,11 @@ app.post('/api/home', (req, res, next) => {
     );
   }
   const sql = `
-    insert into "posts" ("userId", "title", "category", "price", "description", "location")
-    values ($1, $2, $3, $4, $5, $6)
+    insert into "posts" ("userId", "url", "title", "category", "price", "description", "location")
+    values ($1, $2, $3, $4, $5, $6, $7)
     returning *
   `;
-  const params = [userId, title, category, price, description, location];
+  const params = [userId, url, title, category, price, description, location];
   db.query(sql, params)
     .then(result => {
       const [newPost] = result.rows;

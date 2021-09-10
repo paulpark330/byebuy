@@ -10,6 +10,7 @@ create schema "public";
 CREATE TABLE "public"."posts" (
 	"postId" serial NOT NULL,
 	"userId" integer NOT NULL,
+	"url" TEXT,
 	"title" TEXT NOT NULL,
 	"category" TEXT NOT NULL,
 	"price" integer NOT NULL,
