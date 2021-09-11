@@ -1,11 +1,9 @@
 import React, { useEffect, useState, useContext } from 'react';
-import PropTypes from 'prop-types';
 import AppContext from '../lib/app-context';
 import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
 import FormControl from '@material-ui/core/FormControl';
 import { DropzoneArea } from 'material-ui-dropzone';
-import NumberFormat from 'react-number-format';
 import {
   makeStyles,
   Select,
@@ -17,6 +15,7 @@ import {
 import TextField from '@material-ui/core/TextField';
 import { AddAPhoto } from '@material-ui/icons';
 import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
+import InputAdornment from '@material-ui/core/InputAdornment';
 
 const useStyles = makeStyles({
   field: {
@@ -67,34 +66,6 @@ const theme = createTheme({
     }
   }
 });
-
-function NumberFormatCustom(props) {
-  const { inputRef, onChange, ...other } = props;
-
-  return (
-    <NumberFormat
-      {...other}
-      getInputRef={inputRef}
-      onValueChange={values => {
-        onChange({
-          target: {
-            name: props.name,
-            value: values.value
-          }
-        });
-      }}
-      thousandSeparator
-      isNumericString
-      prefix="$"
-    />
-  );
-}
-
-NumberFormatCustom.propTypes = {
-  inputRef: PropTypes.func.isRequired,
-  name: PropTypes.string.isRequired,
-  onChange: PropTypes.func.isRequired
-};
 
 export default function NewPost() {
   const classes = useStyles();
@@ -148,6 +119,7 @@ export default function NewPost() {
   };
 
   const handleSubmit = e => {
+    e.preventDefault();
     setTitleError(false);
     setCategoryError(false);
     setPriceError(false);
@@ -255,7 +227,9 @@ export default function NewPost() {
           color="primary"
           onChange={handleChange('price')}
           InputProps={{
-            inputComponent: NumberFormatCustom
+            startAdornment: (
+              <InputAdornment position="start">$</InputAdornment>
+            )
           }}
           fullWidth
           required

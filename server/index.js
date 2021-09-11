@@ -4,12 +4,7 @@ const errorMiddleware = require('./error-middleware');
 const staticMiddleware = require('./static-middleware');
 const pg = require('pg');
 const ClientError = require('./client-error');
-// const authorizationMiddleware = require('./authorization-middleware');
-// const argon2 = require('argon2');
-// const jwt = require('jsonwebtoken');
-// const ClientError = require('./client-error');
 const uploadsMiddleware = require('./uploads-middleware');
-
 const jsonMiddleware = express.json();
 
 const db = new pg.Pool({
@@ -28,13 +23,16 @@ app.use(staticMiddleware);
 app.use(errorMiddleware);
 
 app.post('/api/new-post', uploadsMiddleware, (req, res, next) => {
-  const url = `/images/${req.file.filename}`;
   const { userId, title, category, price, description, location } = req.body;
   if (!title || !category) {
     throw new ClientError(
       400,
       'title (string), category (string), and price (number) are required fields'
     );
+  }
+  let url = null;
+  if (req.file) {
+    url = `/images/${req.file.filename}`;
   }
   const sql = `
     with "insertedPost" as (

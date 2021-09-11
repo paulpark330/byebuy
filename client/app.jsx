@@ -5,7 +5,6 @@ import NewPost from './pages/new-post';
 import BottomNavBar from './components/bottom-navigation';
 import { createTheme, ThemeProvider } from '@material-ui/core';
 import Header from './components/header';
-// import Layout from './components/Layout';
 import AppContext from './lib/app-context';
 
 const theme = createTheme({

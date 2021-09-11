@@ -25,10 +25,6 @@ module.exports = {
             plugins: ['@babel/plugin-transform-react-jsx']
           }
         }
-      },
-      {
-        test: /\.css$/i,
-        use: ['style-loader', 'css-loader']
       }
     ]
   },
