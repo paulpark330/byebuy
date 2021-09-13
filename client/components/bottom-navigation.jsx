@@ -10,7 +10,6 @@ import { Home, Chat, Add, Favorite, Person } from '@material-ui/icons';
 
 const useStyles = makeStyles({
   root: {
-    width: '100%',
     height: 60
   },
   appBar: {
@@ -29,10 +28,8 @@ export default function BottomNavBar() {
   };
 
   return (
-    <Container maxWidth="sm">
-      <AppBar
-        className={classes.appBar}
-      >
+    <Container maxWidth="xs">
+      <AppBar className={classes.appBar}>
         <BottomNavigation
           value={value}
           onChange={handleChange}

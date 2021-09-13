@@ -24,7 +24,7 @@ export default function Header() {
   const [heading, setHeading] = React.useState('New Post');
 
   return (
-    <Container>
+    <Container maxWidth="xs">
       <Grid container className={classes.root}>
         <Grid
           item

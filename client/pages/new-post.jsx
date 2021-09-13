@@ -158,7 +158,7 @@ export default function NewPost() {
   };
 
   return (
-    <Container>
+    <Container maxWidth="xs">
       <form
         id="upload-form"
         noValidate
@@ -227,9 +227,7 @@ export default function NewPost() {
           color="primary"
           onChange={handleChange('price')}
           InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">$</InputAdornment>
-            )
+            startAdornment: <InputAdornment position="start">$</InputAdornment>
           }}
           fullWidth
           required
