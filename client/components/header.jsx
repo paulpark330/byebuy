@@ -21,7 +21,7 @@ const useStyles = makeStyles({
 
 export default function Header() {
   const classes = useStyles();
-  const [heading, setHeading] = React.useState('New Post');
+  const [heading] = React.useState('New Post');
 
   return (
     <Container maxWidth="xs">

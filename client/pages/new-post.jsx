@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import AppContext from '../lib/app-context';
 import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
@@ -21,7 +21,7 @@ const useStyles = makeStyles({
   field: {
     marginTop: 20,
     marginBottom: 20,
-    display: 'block'
+    display: 'flex'
   },
   button: {
     color: 'white'
@@ -75,26 +75,8 @@ export default function NewPost() {
     price: '',
     description: ''
   });
-  const [location, setLocation] = useState('');
   const [files, setFiles] = useState([]);
   const userId = useContext(AppContext);
-
-  useEffect(() => {
-    navigator.geolocation.getCurrentPosition(position => {
-      const lat = position.coords.latitude;
-      const long = position.coords.longitude;
-      const KEY = 'AIzaSyDmADdAoHWHYXYsnAe1YAVaPgnlR6Fohow';
-      let address = '';
-      fetch(
-        `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${long}&key=${KEY}`
-      )
-        .then(res => res.json())
-        .then(result => {
-          address = result.results[4].formatted_address;
-          setLocation(address);
-        });
-    });
-  });
 
   const [titleError, setTitleError] = useState(false);
   const [categoryError, setCategoryError] = useState(false);
@@ -158,7 +140,7 @@ export default function NewPost() {
   };
 
   return (
-    <Container maxWidth="xs">
+    <Container maxWidth="sm">
       <form
         id="upload-form"
         noValidate
@@ -197,7 +179,6 @@ export default function NewPost() {
         >
           <InputLabel id="select-category">Category</InputLabel>
           <Select
-            className={classes.field}
             labelId="select-category"
             label="Category"
             value={formValues.category}
