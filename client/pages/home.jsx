@@ -25,7 +25,7 @@ export default function Home() {
   return (
     <Container className={classes.root}>
       <Grid container spacing={1}>
-        {posts.map(post => (
+        {[...posts].reverse().map(post => (
           <Grid item key={post.postId} xs={12} sm={6} md={3}>
             <Post post={post} />
           </Grid>
