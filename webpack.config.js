@@ -49,8 +49,6 @@ module.exports = {
     hints: false
   },
   plugins: [
-    new EnvironmentPlugin({
-      GEOCODE_KEY: 'AIzaSyDmADdAoHWHYXYsnAe1YAVaPgnlR6Fohow'
-    })
+    new EnvironmentPlugin(['GEOCODE'])
   ]
 };

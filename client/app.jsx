@@ -40,7 +40,7 @@ function App() {
       const long = position.coords.longitude;
       let address = '';
       fetch(
-        `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${long}&key=${process.env.GEOCODE_KEY}`
+        `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${long}&key=${process.env.GEOCODE}`
       )
         .then(res => res.json())
         .then(result => {
