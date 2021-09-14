@@ -9,6 +9,7 @@ import { createTheme, ThemeProvider } from '@material-ui/core';
 
 import AppContext from './lib/app-context';
 import Layout from './components/layout';
+import Search from './pages/search';
 
 const theme = createTheme({
   palette: {
@@ -33,6 +34,7 @@ const theme = createTheme({
 function App() {
   const [userId] = useState(0);
   const [geoLocation, setGeoLocation] = useState('');
+  const [route, setRoute] = useState('');
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(position => {
@@ -50,7 +52,7 @@ function App() {
     });
   }, []);
 
-  const contextValue = { userId, geoLocation };
+  const contextValue = { userId, geoLocation, setRoute, route };
 
   return (
     <AppContext.Provider value={contextValue}>
@@ -72,6 +74,9 @@ function App() {
               </Route>
               <Route path="/profile">
                 <Profile />
+              </Route>
+              <Route path="/search">
+                <Search />
               </Route>
             </Switch>
           </Layout>

@@ -1,38 +1,20 @@
-import React, { useState } from 'react';
-
-import { Close, Home, Chat, Add, Favorite, Person } from '@material-ui/icons';
+import React, { useState, useContext, useEffect } from 'react';
+import AppContext from '../lib/app-context';
+import { Home, Chat, Add, Favorite, Person } from '@material-ui/icons';
 import { useHistory, useLocation } from 'react-router-dom';
 import {
   makeStyles,
   BottomNavigation,
   BottomNavigationAction,
   Container,
-  AppBar,
-  Typography,
-  Grid
+  AppBar
 } from '@material-ui/core';
+
+import TopAppBar from './top-appbar';
 
 const useStyles = makeStyles(theme => {
   return {
-    header: {
-      width: '100%',
-      height: theme.spacing(8),
-      padding: theme.spacing(2),
-      backgroundColor: 'white'
-    },
-    topAppBar: {
-      position: 'fixed',
-      top: '0',
-      bottom: 'auto'
-    },
-    title: {
-      fontSize: 30,
-      fontWeight: 700
-    },
-    closeIcon: {
-      color: 'red',
-      fontSize: 30
-    },
+
     page: {
       paddingTop: theme.spacing(10),
       paddingBottom: theme.spacing(10)
@@ -52,17 +34,21 @@ const useStyles = makeStyles(theme => {
 });
 
 export default function Layout({ children }) {
+  const { route, setRoute } = useContext(AppContext);
 
   const classes = useStyles();
   const location = useLocation();
   const history = useHistory();
 
-  const [value, setValue] = useState('Home');
-  const [title, setTitle] = useState(value);
+  const [value, setValue] = useState(route);
+
+  useEffect(() => {
+    setValue(route);
+  }, []);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
-    setTitle(newValue);
+    setRoute(newValue);
   };
 
   const menuItems = [
@@ -100,32 +86,7 @@ export default function Layout({ children }) {
 
   return (
     <div>
-      <Container maxWidth="sm">
-        <AppBar elevation={1} className={classes.topAppBar}>
-          <Grid container className={classes.header}>
-            <Grid
-              item
-              xs={6}
-              container
-              justifyContent="flex-start"
-              alignItems="center"
-            >
-              <Typography variant="h1" className={classes.title}>
-                {title}
-              </Typography>
-            </Grid>
-            <Grid
-              item
-              xs={6}
-              container
-              justifyContent="flex-end"
-              alignItems="center"
-            >
-              <Close className={classes.closeIcon} />
-            </Grid>
-          </Grid>
-        </AppBar>
-      </Container>
+      <TopAppBar />
 
       <div className={classes.page}>{children}</div>
 
