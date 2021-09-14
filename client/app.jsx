@@ -38,10 +38,9 @@ function App() {
     navigator.geolocation.getCurrentPosition(position => {
       const lat = position.coords.latitude;
       const long = position.coords.longitude;
-      const KEY = 'AIzaSyDmADdAoHWHYXYsnAe1YAVaPgnlR6Fohow';
       let address = '';
       fetch(
-         `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${long}&key=${KEY}`
+        `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${long}&key=${process.env.GEOCODE_KEY}`
       )
         .then(res => res.json())
         .then(result => {
@@ -58,25 +57,23 @@ function App() {
       <ThemeProvider theme={theme}>
         <Router>
           <Layout>
-
-          <Switch>
-            <Route exact path="/">
-              <Home />
-            </Route>
-            <Route path="/new-post">
-              <NewPost />
-            </Route>
-            <Route path="/chat">
-              <Chat />
-            </Route>
-            <Route path="/favorites">
-              <Favorites />
-            </Route>
-            <Route path="/profile">
-              <Profile />
-            </Route>
-          </Switch>
-
+            <Switch>
+              <Route exact path="/">
+                <Home />
+              </Route>
+              <Route path="/new-post">
+                <NewPost />
+              </Route>
+              <Route path="/chat">
+                <Chat />
+              </Route>
+              <Route path="/favorites">
+                <Favorites />
+              </Route>
+              <Route path="/profile">
+                <Profile />
+              </Route>
+            </Switch>
           </Layout>
         </Router>
       </ThemeProvider>

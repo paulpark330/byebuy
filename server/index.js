@@ -58,6 +58,7 @@ app.get('/api/home', (req, res, next) => {
   select *
     from "posts"
     join "pictures" using ("postId")
+    order by "postId" desc
   `;
   db.query(sql)
     .then(result => {
