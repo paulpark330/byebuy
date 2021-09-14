@@ -1,6 +1,7 @@
 require('dotenv/config');
-const path = require('path');
 
+const path = require('path');
+const { EnvironmentPlugin } = require('webpack');
 const clientPath = path.join(__dirname, 'client');
 const serverPublicPath = path.join(__dirname, 'server/public');
 const serverPublicImagesPath = path.join(serverPublicPath, 'images');
@@ -46,5 +47,8 @@ module.exports = {
   },
   performance: {
     hints: false
-  }
+  },
+  plugins: [
+    new EnvironmentPlugin(['GEOCODE'])
+  ]
 };

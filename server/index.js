@@ -53,6 +53,21 @@ app.post('/api/new-post', uploadsMiddleware, (req, res, next) => {
     .catch(err => next(err));
 });
 
+app.get('/api/home', (req, res, next) => {
+  const sql = `
+  select *
+    from "posts"
+    join "pictures" using ("postId")
+    order by "postId" desc
+  `;
+  db.query(sql)
+    .then(result => {
+      const allPosts = result.rows;
+      res.status(201).json(allPosts);
+    })
+    .catch(err => next(err));
+});
+
 app.listen(process.env.PORT, () => {
   // eslint-disable-next-line no-console
   console.log(`express server listening on port ${process.env.PORT}`);

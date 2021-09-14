@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import AppContext from '../lib/app-context';
 import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
@@ -16,12 +16,13 @@ import TextField from '@material-ui/core/TextField';
 import { AddAPhoto } from '@material-ui/icons';
 import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
 import InputAdornment from '@material-ui/core/InputAdornment';
+import { useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles({
   field: {
     marginTop: 20,
     marginBottom: 20,
-    display: 'block'
+    display: 'flex'
   },
   button: {
     color: 'white'
@@ -68,34 +69,16 @@ const theme = createTheme({
 });
 
 export default function NewPost() {
+  const history = useHistory();
   const classes = useStyles();
+  const { userId, geoLocation } = useContext(AppContext);
   const [formValues, setFormValues] = useState({
     title: '',
     category: '',
     price: '',
     description: ''
   });
-  const [location, setLocation] = useState('');
   const [files, setFiles] = useState([]);
-  const userId = useContext(AppContext);
-
-  useEffect(() => {
-    navigator.geolocation.getCurrentPosition(position => {
-      const lat = position.coords.latitude;
-      const long = position.coords.longitude;
-      const KEY = 'AIzaSyDmADdAoHWHYXYsnAe1YAVaPgnlR6Fohow';
-      let address = '';
-      fetch(
-        `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${long}&key=${KEY}`
-      )
-        .then(res => res.json())
-        .then(result => {
-          address = result.results[4].formatted_address;
-          setLocation(address);
-        });
-    });
-  });
-
   const [titleError, setTitleError] = useState(false);
   const [categoryError, setCategoryError] = useState(false);
   const [priceError, setPriceError] = useState(false);
@@ -126,7 +109,7 @@ export default function NewPost() {
     const newPost = new FormData(event.target);
     newPost.append('image', files[0]);
     newPost.append('userId', userId);
-    newPost.append('location', location);
+    newPost.append('location', geoLocation);
     newPost.set('price', formValues.price);
 
     if (formValues.title === '') {
@@ -151,6 +134,7 @@ export default function NewPost() {
         .then(result => {
           document.querySelector('#upload-form').reset();
         })
+        .then(() => history.push('/'))
         .catch(err => {
           console.error(err);
         });
@@ -158,7 +142,7 @@ export default function NewPost() {
   };
 
   return (
-    <Container>
+    <Container maxWidth="sm">
       <form
         id="upload-form"
         noValidate
@@ -197,7 +181,6 @@ export default function NewPost() {
         >
           <InputLabel id="select-category">Category</InputLabel>
           <Select
-            className={classes.field}
             labelId="select-category"
             label="Category"
             value={formValues.category}
@@ -227,9 +210,7 @@ export default function NewPost() {
           color="primary"
           onChange={handleChange('price')}
           InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">$</InputAdornment>
-            )
+            startAdornment: <InputAdornment position="start">$</InputAdornment>
           }}
           fullWidth
           required
@@ -243,7 +224,7 @@ export default function NewPost() {
           color="primary"
           onChange={handleChange('description')}
           multiline
-          rows={6}
+          rows={8}
           fullWidth
         />
         <Button
