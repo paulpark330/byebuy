@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import Home from './pages/home';
 import NewPost from './pages/new-post';
@@ -32,9 +32,29 @@ const theme = createTheme({
 
 function App() {
   const [userId] = useState(0);
+  const [geoLocation, setGeoLocation] = useState('');
+
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition(position => {
+      const lat = position.coords.latitude;
+      const long = position.coords.longitude;
+      const KEY = 'AIzaSyDmADdAoHWHYXYsnAe1YAVaPgnlR6Fohow';
+      let address = '';
+      fetch(
+         `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${long}&key=${KEY}`
+      )
+        .then(res => res.json())
+        .then(result => {
+          address = result.results[0].address_components[3].long_name;
+          setGeoLocation(address);
+        });
+    });
+  }, []);
+
+  const contextValue = { userId, geoLocation };
 
   return (
-    <AppContext.Provider value={userId}>
+    <AppContext.Provider value={contextValue}>
       <ThemeProvider theme={theme}>
         <Router>
           <Layout>

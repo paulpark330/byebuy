@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
+
 import { Close, Home, Chat, Add, Favorite, Person } from '@material-ui/icons';
 import { useHistory, useLocation } from 'react-router-dom';
 import {
@@ -15,7 +16,14 @@ const useStyles = makeStyles(theme => {
   return {
     header: {
       width: '100%',
-      height: theme.spacing(8)
+      height: theme.spacing(8),
+      padding: theme.spacing(2),
+      backgroundColor: 'white'
+    },
+    topAppBar: {
+      position: 'fixed',
+      top: '0',
+      bottom: 'auto'
     },
     title: {
       fontSize: 30,
@@ -26,12 +34,13 @@ const useStyles = makeStyles(theme => {
       fontSize: 30
     },
     page: {
-      padding: theme.spacing(2)
+      paddingTop: theme.spacing(10),
+      paddingBottom: theme.spacing(10)
     },
     bottomNav: {
       height: theme.spacing(8)
     },
-    appBar: {
+    bottomAppBar: {
       position: 'fixed',
       top: 'auto',
       bottom: '0'
@@ -40,34 +49,16 @@ const useStyles = makeStyles(theme => {
       backgroundColor: '#EEEEEE'
     }
   };
-
 });
 
 export default function Layout({ children }) {
-  useEffect(() => {
-    navigator.geolocation.getCurrentPosition(position => {
-      const lat = position.coords.latitude;
-      const long = position.coords.longitude;
-      const KEY = 'AIzaSyDmADdAoHWHYXYsnAe1YAVaPgnlR6Fohow';
-      let address = '';
-      fetch(
-          `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${long}&key=${KEY}`
-      )
-        .then(res => res.json())
-        .then(result => {
-          address = result.results[6].formatted_address;
-          setGeoLocation(address);
-          setTitle(address);
-        });
-    });
-  }, []);
 
   const classes = useStyles();
-  const [value, setValue] = useState('Home');
-  const [geoLocation, setGeoLocation] = useState('');
-  const [title, setTitle] = useState(value);
   const location = useLocation();
   const history = useHistory();
+
+  const [value, setValue] = useState('Home');
+  const [title, setTitle] = useState(value);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -78,7 +69,7 @@ export default function Layout({ children }) {
     {
       label: 'Home',
       icon: <Home />,
-      value: geoLocation,
+      value: 'Home',
       path: '/'
     },
     {
@@ -90,7 +81,7 @@ export default function Layout({ children }) {
     {
       label: 'New',
       icon: <Add />,
-      value: 'New post',
+      value: 'New Post',
       path: '/new-post'
     },
     {
@@ -110,34 +101,36 @@ export default function Layout({ children }) {
   return (
     <div>
       <Container maxWidth="sm">
-        <Grid container className={classes.header}>
-          <Grid
-            item
-            xs={6}
-            container
-            justifyContent="flex-start"
-            alignItems="center"
-          >
-            <Typography variant="h1" className={classes.title}>
-              {title}
-            </Typography>
+        <AppBar elevation={1} className={classes.topAppBar}>
+          <Grid container className={classes.header}>
+            <Grid
+              item
+              xs={6}
+              container
+              justifyContent="flex-start"
+              alignItems="center"
+            >
+              <Typography variant="h1" className={classes.title}>
+                {title}
+              </Typography>
+            </Grid>
+            <Grid
+              item
+              xs={6}
+              container
+              justifyContent="flex-end"
+              alignItems="center"
+            >
+              <Close className={classes.closeIcon} />
+            </Grid>
           </Grid>
-          <Grid
-            item
-            xs={6}
-            container
-            justifyContent="flex-end"
-            alignItems="center"
-          >
-            <Close className={classes.closeIcon} />
-          </Grid>
-        </Grid>
+        </AppBar>
       </Container>
 
       <div className={classes.page}>{children}</div>
 
       <Container maxWidth="sm">
-        <AppBar className={classes.appBar}>
+        <AppBar className={classes.bottomAppBar}>
           <BottomNavigation
             value={value}
             onChange={handleChange}
@@ -153,7 +146,6 @@ export default function Layout({ children }) {
                 className={
                   location.pathname === item.path ? classes.active : null
                 }
-
               />
             ))}
           </BottomNavigation>

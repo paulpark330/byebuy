@@ -56,7 +56,8 @@ app.post('/api/new-post', uploadsMiddleware, (req, res, next) => {
 app.get('/api/home', (req, res, next) => {
   const sql = `
   select *
-    from "posts";
+    from "posts"
+    join "pictures" using ("postId")
   `;
   db.query(sql)
     .then(result => {
@@ -64,8 +65,7 @@ app.get('/api/home', (req, res, next) => {
       res.status(201).json(allPosts);
     })
     .catch(err => next(err));
-}
-);
+});
 
 app.listen(process.env.PORT, () => {
   // eslint-disable-next-line no-console

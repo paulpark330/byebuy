@@ -16,6 +16,7 @@ import TextField from '@material-ui/core/TextField';
 import { AddAPhoto } from '@material-ui/icons';
 import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
 import InputAdornment from '@material-ui/core/InputAdornment';
+import { useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles({
   field: {
@@ -68,7 +69,9 @@ const theme = createTheme({
 });
 
 export default function NewPost() {
+  const history = useHistory();
   const classes = useStyles();
+  const { userId, geoLocation } = useContext(AppContext);
   const [formValues, setFormValues] = useState({
     title: '',
     category: '',
@@ -76,8 +79,6 @@ export default function NewPost() {
     description: ''
   });
   const [files, setFiles] = useState([]);
-  const userId = useContext(AppContext);
-
   const [titleError, setTitleError] = useState(false);
   const [categoryError, setCategoryError] = useState(false);
   const [priceError, setPriceError] = useState(false);
@@ -108,7 +109,7 @@ export default function NewPost() {
     const newPost = new FormData(event.target);
     newPost.append('image', files[0]);
     newPost.append('userId', userId);
-    newPost.append('location', location);
+    newPost.append('location', geoLocation);
     newPost.set('price', formValues.price);
 
     if (formValues.title === '') {
@@ -133,6 +134,7 @@ export default function NewPost() {
         .then(result => {
           document.querySelector('#upload-form').reset();
         })
+        .then(() => history.push('/'))
         .catch(err => {
           console.error(err);
         });
@@ -222,7 +224,7 @@ export default function NewPost() {
           color="primary"
           onChange={handleChange('description')}
           multiline
-          rows={6}
+          rows={8}
           fullWidth
         />
         <Button
