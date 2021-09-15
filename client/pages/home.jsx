@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
+import AppContext from '../lib/app-context';
 import { Grid, Container, makeStyles } from '@material-ui/core';
 import Post from '../components/post';
 
@@ -13,10 +14,12 @@ const useStyles = makeStyles(theme => {
 
 export default function Home() {
   const classes = useStyles();
+  const { setPageTitle } = useContext(AppContext);
 
   const [posts, setPosts] = useState([]);
 
   useEffect(() => {
+    setPageTitle('Home');
     fetch('/api/home')
       .then(res => res.json())
       .then(posts => setPosts(posts));

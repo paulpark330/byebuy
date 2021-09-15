@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import AppContext from '../lib/app-context';
 import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
@@ -71,7 +71,7 @@ const theme = createTheme({
 export default function NewPost() {
   const history = useHistory();
   const classes = useStyles();
-  const { userId, geoLocation } = useContext(AppContext);
+  const { userId, geoLocation, setPageTitle } = useContext(AppContext);
   const [formValues, setFormValues] = useState({
     title: '',
     category: '',
@@ -82,6 +82,10 @@ export default function NewPost() {
   const [titleError, setTitleError] = useState(false);
   const [categoryError, setCategoryError] = useState(false);
   const [priceError, setPriceError] = useState(false);
+
+  useEffect(() => {
+    setPageTitle('New Post');
+  }, []);
 
   const handleChange = prop => e => {
     setFormValues({ ...formValues, [prop]: e.target.value });
