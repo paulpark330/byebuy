@@ -21,12 +21,12 @@ const useStyles = makeStyles(theme => {
 export default function Search() {
   const history = useHistory();
   const classes = useStyles();
-  const { setRoute } = useContext(AppContext);
+  const { setPageTitle } = useContext(AppContext);
   const [search, setSearch] = useState('');
   const [results, setResults] = useState([]);
 
   useEffect(() => {
-    setRoute('Search');
+    setPageTitle('Search');
   }, []);
 
   const handleChange = e => {
@@ -43,7 +43,7 @@ export default function Search() {
 
   return (
     <div>
-      <Container maxWidth="sm">
+      <Container>
         <form
           id="search-form"
           noValidate

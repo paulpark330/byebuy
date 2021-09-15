@@ -14,12 +14,12 @@ const useStyles = makeStyles(theme => {
 
 export default function Home() {
   const classes = useStyles();
-  const { setRoute } = useContext(AppContext);
+  const { setPageTitle } = useContext(AppContext);
 
   const [posts, setPosts] = useState([]);
 
   useEffect(() => {
-    setRoute('Home');
+    setPageTitle('Home');
     fetch('/api/home')
       .then(res => res.json())
       .then(posts => setPosts(posts));

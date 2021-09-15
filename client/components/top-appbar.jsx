@@ -38,22 +38,22 @@ const useStyles = makeStyles(theme => ({
 export default function TopAppBar() {
   const classes = useStyles();
   const history = useHistory();
-  const { route } = useContext(AppContext);
+  const { pageTitle } = useContext(AppContext);
 
   return (
     <div className={classes.root}>
       <AppBar className={classes.appBar} elevation={1} position="fixed">
         <Toolbar>
           <Typography variant="h5" component="h1" className={classes.title}>
-            {route}
+            {pageTitle}
           </Typography>
           <div>
-            {route === 'Home' && (
+            {pageTitle === 'Home' && (
               <IconButton onClick={() => history.push('/search')}>
                 <Search className={classes.icon} />
               </IconButton>
             )}
-            {route === 'Search' && (
+            {pageTitle === 'Search' && (
               <IconButton onClick={() => history.goBack()}>
                 <ArrowBack className={classes.icon} />
               </IconButton>

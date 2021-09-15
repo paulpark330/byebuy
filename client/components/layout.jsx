@@ -34,21 +34,21 @@ const useStyles = makeStyles(theme => {
 });
 
 export default function Layout({ children }) {
-  const { route, setRoute } = useContext(AppContext);
+  const { pageTitle, setPageTitle } = useContext(AppContext);
 
   const classes = useStyles();
   const location = useLocation();
   const history = useHistory();
 
-  const [value, setValue] = useState(route);
+  const [value, setValue] = useState(pageTitle);
 
   useEffect(() => {
-    setValue(route);
+    setValue(pageTitle);
   }, []);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
-    setRoute(newValue);
+    setPageTitle(newValue);
   };
 
   const menuItems = [

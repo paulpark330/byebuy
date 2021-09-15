@@ -34,7 +34,7 @@ const theme = createTheme({
 function App() {
   const [userId] = useState(0);
   const [geoLocation, setGeoLocation] = useState('');
-  const [route, setRoute] = useState('');
+  const [pageTitle, setPageTitle] = useState('');
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(position => {
@@ -52,7 +52,7 @@ function App() {
     });
   }, []);
 
-  const contextValue = { userId, geoLocation, setRoute, route };
+  const contextValue = { userId, geoLocation, setPageTitle, pageTitle };
 
   return (
     <AppContext.Provider value={contextValue}>

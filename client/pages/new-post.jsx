@@ -71,7 +71,7 @@ const theme = createTheme({
 export default function NewPost() {
   const history = useHistory();
   const classes = useStyles();
-  const { userId, geoLocation, setRoute } = useContext(AppContext);
+  const { userId, geoLocation, setPageTitle } = useContext(AppContext);
   const [formValues, setFormValues] = useState({
     title: '',
     category: '',
@@ -84,7 +84,7 @@ export default function NewPost() {
   const [priceError, setPriceError] = useState(false);
 
   useEffect(() => {
-    setRoute('New Post');
+    setPageTitle('New Post');
   }, []);
 
   const handleChange = prop => e => {
