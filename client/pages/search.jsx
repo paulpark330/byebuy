@@ -1,6 +1,12 @@
 import React, { useEffect, useState, useContext } from 'react';
 import AppContext from '../lib/app-context';
-import { Grid, Container, makeStyles, TextField, InputAdornment } from '@material-ui/core';
+import {
+  Grid,
+  Container,
+  makeStyles,
+  TextField,
+  InputAdornment
+} from '@material-ui/core';
 import Post from '../components/post';
 import { Search as SearchIcon } from '@material-ui/icons';
 import { useHistory } from 'react-router-dom';
@@ -22,12 +28,20 @@ export default function Search() {
   const history = useHistory();
   const classes = useStyles();
   const { setPageTitle } = useContext(AppContext);
+
   const [search, setSearch] = useState('');
   const [results, setResults] = useState([]);
+  const [query, setQuery] = useState(history.location.search);
 
   useEffect(() => {
     setPageTitle('Search');
   }, []);
+
+  useEffect(() => {
+    fetch(`api/search${query}`)
+      .then(res => res.json())
+      .then(result => setResults(result));
+  }, [query]);
 
   const handleChange = e => {
     setSearch(e.target.value);
@@ -35,10 +49,9 @@ export default function Search() {
 
   const handleSubmit = e => {
     e.preventDefault();
-    history.push('/search?' + new URLSearchParams({ input: search }));
-    fetch('api/search?' + new URLSearchParams({ input: search }))
-      .then(res => res.json())
-      .then(result => setResults(result));
+    const newQuery = new URLSearchParams({ input: search });
+    history.push(`search?${newQuery}`);
+    setQuery(history.location.search);
   };
 
   return (
@@ -52,6 +65,7 @@ export default function Search() {
         >
           <TextField
             onChange={handleChange}
+            autoFocus={true}
             fullWidth
             size="medium"
             variant="filled"
