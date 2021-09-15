@@ -54,7 +54,7 @@ export default function TopAppBar() {
               </IconButton>
             )}
             {pageTitle === 'Search' && (
-              <IconButton onClick={() => history.goBack()}>
+              <IconButton onClick={() => history.push('/')}>
                 <ArrowBack className={classes.icon} />
               </IconButton>
             )}
