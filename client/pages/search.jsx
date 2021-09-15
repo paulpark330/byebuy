@@ -9,7 +9,7 @@ import {
 } from '@material-ui/core';
 import Post from '../components/post';
 import { Search as SearchIcon } from '@material-ui/icons';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 
 const useStyles = makeStyles(theme => {
   return {
@@ -26,22 +26,22 @@ const useStyles = makeStyles(theme => {
 
 export default function Search() {
   const history = useHistory();
+  const location = useLocation();
   const classes = useStyles();
   const { setPageTitle } = useContext(AppContext);
 
   const [search, setSearch] = useState('');
   const [results, setResults] = useState([]);
-  const [query, setQuery] = useState(history.location.search);
 
   useEffect(() => {
     setPageTitle('Search');
   }, []);
 
   useEffect(() => {
-    fetch(`api/search${query}`)
+    fetch(`api/search${location.search}`)
       .then(res => res.json())
       .then(result => setResults(result));
-  }, [query]);
+  }, [location.search]);
 
   const handleChange = e => {
     setSearch(e.target.value);
@@ -51,7 +51,6 @@ export default function Search() {
     e.preventDefault();
     const newQuery = new URLSearchParams({ input: search });
     history.push(`search?${newQuery}`);
-    setQuery(history.location.search);
   };
 
   return (
