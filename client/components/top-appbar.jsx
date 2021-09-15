@@ -3,14 +3,7 @@ import AppContext from '../lib/app-context';
 import { makeStyles } from '@material-ui/core/styles';
 import { ArrowBack, Search } from '@material-ui/icons/';
 import { useHistory } from 'react-router-dom';
-import {
-  Typography,
-  IconButton,
-  AppBar,
-  Toolbar,
-  TextField,
-  InputAdornment
-} from '@material-ui/core';
+import { Typography, IconButton, AppBar, Toolbar } from '@material-ui/core';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -47,11 +40,6 @@ export default function TopAppBar() {
   const history = useHistory();
   const { route } = useContext(AppContext);
 
-  const handleSubmit = e => {
-    e.preventDefault();
-    const newSearch = new FormData(event.target);
-  };
-
   return (
     <div className={classes.root}>
       <AppBar className={classes.appBar} elevation={1} position="fixed">
@@ -60,40 +48,15 @@ export default function TopAppBar() {
             {route}
           </Typography>
           <div>
-            {(route === 'Home' || route === 'Favorites') && (
+            {route === 'Home' && (
               <IconButton onClick={() => history.push('/search')}>
                 <Search className={classes.icon} />
               </IconButton>
             )}
             {route === 'Search' && (
-              <div className={classes.search}>
-                <form
-                  id="search-form"
-                  noValidate
-                  autoComplete="off"
-                  onSubmit={handleSubmit}
-                >
-                  <TextField
-                    className={classes.field}
-                    label="Search"
-                    name="search"
-                    size='small'
-                    variant="filled"
-                    type="search"
-                    color="secondary"
-                    InputProps={{
-                      startAdornment: (
-                        <InputAdornment position="start">
-                          <Search className={classes.icon}/>
-                        </InputAdornment>
-                      )
-                    }}
-                  />
-                </form>
-                <IconButton onClick={() => history.goBack()}>
-                  <ArrowBack className={classes.icon} />
-                </IconButton>
-              </div>
+              <IconButton onClick={() => history.goBack()}>
+                <ArrowBack className={classes.icon} />
+              </IconButton>
             )}
           </div>
         </Toolbar>

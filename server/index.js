@@ -68,6 +68,24 @@ app.get('/api/home', (req, res, next) => {
     .catch(err => next(err));
 });
 
+app.get('/api/search', (req, res, next) => {
+  const search = req.query.input;
+  const sql = `
+  select *
+    from "posts"
+    join "pictures" using ("postId")
+    where "title" || ' ' || "description" ILIKE $1
+    order by "postId" desc
+  `;
+  const params = [`%${search}%`];
+  db.query(sql, params)
+    .then(result => {
+      const allPosts = result.rows;
+      res.status(201).json(allPosts);
+    })
+    .catch(err => next(err));
+});
+
 app.listen(process.env.PORT, () => {
   // eslint-disable-next-line no-console
   console.log(`express server listening on port ${process.env.PORT}`);
