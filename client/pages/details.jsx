@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react';
-import AppContext from '../lib/app-context';
+import { useLocation, useHistory } from 'react-router-dom';
+
 import {
   Container,
   makeStyles,
@@ -14,8 +15,9 @@ import {
   Avatar,
   IconButton
 } from '@material-ui/core';
-import { useLocation } from 'react-router-dom';
-import { FavoriteBorder } from '@material-ui/icons';
+import { FavoriteBorder, ArrowBack } from '@material-ui/icons';
+
+import AppContext from '../lib/app-context';
 
 const useStyles = makeStyles(theme => {
   return {
@@ -50,6 +52,14 @@ const useStyles = makeStyles(theme => {
     },
     postContent: {
       paddingTop: '0'
+    },
+    iconButton: {
+      position: 'absolute',
+      top: theme.spacing(0),
+      left: theme.spacing(0)
+    },
+    arrowBack: {
+      fontSize: 40
     }
 
   };
@@ -60,9 +70,10 @@ function useQuery() {
 }
 
 export default function Details() {
-  const classes = useStyles();
   const { setPageTitle } = useContext(AppContext);
+  const classes = useStyles();
   const query = useQuery();
+  const history = useHistory();
 
   const [post, setpost] = useState([]);
 
@@ -79,6 +90,9 @@ export default function Details() {
   return (
     <div>
       <Card elevation={1} className={classes.root}>
+        <IconButton className={classes.iconButton} onClick={() => history.goBack()}>
+          <ArrowBack className={classes.arrowBack} />
+        </IconButton>
         <CardMedia
           component="img"
           className={classes.cover}
@@ -87,11 +101,7 @@ export default function Details() {
         <div>
           <CardHeader
             className={classes.header}
-            avatar={
-              <Avatar className={classes.avatar}>
-                A
-              </Avatar>
-            }
+            avatar={<Avatar className={classes.avatar}>A</Avatar>}
             action={
               <IconButton>
                 <FavoriteBorder className={classes.favoriteBorder} />

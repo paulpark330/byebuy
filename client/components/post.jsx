@@ -35,6 +35,7 @@ export default function Post({ post }) {
             <CardHeader
               className={classes.title}
               title={post.title}
+              titleTypographyProps={{ variant: 'h6' }}
               subheader={`$${post.price}`}
             />
             <CardContent className={classes.location}>

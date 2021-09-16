@@ -1,16 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+
 import Home from './pages/home';
-import NewPost from './pages/new-post';
 import Chat from './pages/chat';
+import NewPost from './pages/new-post';
 import Favorites from './pages/favorites';
 import Profile from './pages/profile';
 import Details from './pages/details';
+import Search from './pages/search';
+
+import TopAppBar from './components/top-appbar';
+import Page from './components/page';
+import BottomNavBar from './components/bottom-navbar';
+
 import { createTheme, ThemeProvider } from '@material-ui/core';
 
 import AppContext from './lib/app-context';
-import Layout from './components/layout';
-import Search from './pages/search';
 
 const theme = createTheme({
   palette: {
@@ -59,31 +64,42 @@ function App() {
     <AppContext.Provider value={contextValue}>
       <ThemeProvider theme={theme}>
         <Router>
-          <Layout>
+          <Page>
             <Switch>
               <Route exact path="/">
+                <TopAppBar />
                 <Home />
+                <BottomNavBar />
               </Route>
               <Route path="/new-post">
+                <TopAppBar />
                 <NewPost />
+                <BottomNavBar />
               </Route>
               <Route path="/chat">
+                <TopAppBar />
                 <Chat />
+                <BottomNavBar />
               </Route>
               <Route path="/favorites">
+                <TopAppBar />
                 <Favorites />
+                <BottomNavBar />
               </Route>
               <Route path="/profile">
+                <TopAppBar />
                 <Profile />
+                <BottomNavBar />
               </Route>
               <Route path="/search">
+                <TopAppBar />
                 <Search />
               </Route>
               <Route>
                 <Details path="/post" />
               </Route>
             </Switch>
-          </Layout>
+          </Page>
         </Router>
       </ThemeProvider>
     </AppContext.Provider>

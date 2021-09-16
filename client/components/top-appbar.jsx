@@ -1,9 +1,11 @@
 import React, { useContext } from 'react';
-import AppContext from '../lib/app-context';
+import { useHistory } from 'react-router-dom';
+
+import { Typography, IconButton, AppBar, Toolbar } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { ArrowBack, Search } from '@material-ui/icons/';
-import { useHistory } from 'react-router-dom';
-import { Typography, IconButton, AppBar, Toolbar } from '@material-ui/core';
+
+import AppContext from '../lib/app-context';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -43,8 +45,6 @@ export default function TopAppBar() {
 
   return (
     <div className={classes.root}>
-      {pageTitle !== 'Details'
-        ? (
         <AppBar className={classes.appBar} elevation={1} position="fixed">
           <Toolbar>
             <Typography variant="h5" component="h1" className={classes.title}>
@@ -64,12 +64,6 @@ export default function TopAppBar() {
             </div>
           </Toolbar>
         </AppBar>
-          )
-        : (
-        <IconButton onClick={() => history.goBack()}>
-          <ArrowBack className={classes.icon} />
-        </IconButton>
-          )}
     </div>
   );
 }
