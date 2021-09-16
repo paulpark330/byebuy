@@ -8,6 +8,7 @@ import Favorites from './pages/favorites';
 import Profile from './pages/profile';
 import Details from './pages/details';
 import Search from './pages/search';
+import Auth from './pages/auth';
 
 import TopAppBar from './components/top-appbar';
 import Page from './components/page';
@@ -20,10 +21,11 @@ import AppContext from './lib/app-context';
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#6EB289'
+      main: '#6EB289',
+      light: '#FFF'
     },
     secondary: {
-      main: '#427d5a'
+      main: '#FFF'
     }
   },
   typography: {
@@ -56,6 +58,45 @@ function App() {
     });
   }, []);
 
+  const renderPage = () => {
+    return (
+      <Switch>
+        <Route exact path="/">
+          <TopAppBar />
+          <Home />
+          <BottomNavBar />
+        </Route>
+        <Route path="/new-post">
+          <TopAppBar />
+          <NewPost />
+          <BottomNavBar />
+        </Route>
+        <Route path="/chat">
+          <TopAppBar />
+          <Chat />
+          <BottomNavBar />
+        </Route>
+        <Route path="/favorites">
+          <TopAppBar />
+          <Favorites />
+          <BottomNavBar />
+        </Route>
+        <Route path="/profile">
+          <TopAppBar />
+          <Profile />
+          <BottomNavBar />
+        </Route>
+        <Route path="/search">
+          <TopAppBar />
+          <Search />
+        </Route>
+        <Route>
+          <Details path="/post" />
+        </Route>
+      </Switch>
+    );
+  };
+
   const contextValue = { userId, geoLocation, setPageTitle, pageTitle };
 
   return (
@@ -63,40 +104,10 @@ function App() {
       <ThemeProvider theme={theme}>
         <Router>
           <Page>
-            <Switch>
-              <Route exact path="/">
-                <TopAppBar />
-                <Home />
-                <BottomNavBar />
-              </Route>
-              <Route path="/new-post">
-                <TopAppBar />
-                <NewPost />
-                <BottomNavBar />
-              </Route>
-              <Route path="/chat">
-                <TopAppBar />
-                <Chat />
-                <BottomNavBar />
-              </Route>
-              <Route path="/favorites">
-                <TopAppBar />
-                <Favorites />
-                <BottomNavBar />
-              </Route>
-              <Route path="/profile">
-                <TopAppBar />
-                <Profile />
-                <BottomNavBar />
-              </Route>
-              <Route path="/search">
-                <TopAppBar />
-                <Search />
-              </Route>
-              <Route>
-                <Details path="/post" />
-              </Route>
-            </Switch>
+            {/* {renderPage()} */}
+            <Route path="/signup">
+              <Auth />
+            </Route>
           </Page>
         </Router>
       </ThemeProvider>
