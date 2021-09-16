@@ -44,6 +44,12 @@ const useStyles = makeStyles(theme => {
     },
     favoriteBorder: {
       fontSize: 30
+    },
+    header: {
+      paddingBottom: theme.spacing(1)
+    },
+    postContent: {
+      paddingTop: '0'
     }
 
   };
@@ -80,6 +86,7 @@ export default function Details() {
         />
         <div>
           <CardHeader
+            className={classes.header}
             avatar={
               <Avatar className={classes.avatar}>
                 A
@@ -93,7 +100,8 @@ export default function Details() {
             title={post.nickname}
             subheader={post.location}
           />
-          <CardContent>
+          <CardContent className={classes.postContent}>
+            <Typography variant="h6">{post.title}</Typography>
             <Typography variant="body2">{post.description}</Typography>
           </CardContent>
         </div>
