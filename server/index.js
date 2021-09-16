@@ -63,7 +63,7 @@ app.get('/api/home', (req, res, next) => {
   db.query(sql)
     .then(result => {
       const allPosts = result.rows;
-      res.status(201).json(allPosts);
+      res.status(200).json(allPosts);
     })
     .catch(err => next(err));
 });
@@ -81,7 +81,7 @@ app.get('/api/search', (req, res, next) => {
   db.query(sql, params)
     .then(result => {
       const allPosts = result.rows;
-      res.status(201).json(allPosts);
+      res.status(200).json(allPosts);
     })
     .catch(err => next(err));
 });
@@ -106,7 +106,7 @@ app.get('/api/post/:postId', (req, res, next) => {
   db.query(sql, params)
     .then(result => {
       const [post] = result.rows;
-      res.status(201).json(post);
+      res.status(200).json(post);
     })
     .catch(err => next(err));
 });

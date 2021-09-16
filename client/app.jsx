@@ -46,14 +46,12 @@ function App() {
     navigator.geolocation.getCurrentPosition(position => {
       const lat = position.coords.latitude;
       const long = position.coords.longitude;
-      let address = '';
       fetch(
         `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${long}&result_type=postal_code&key=${process.env.GEOCODE}`
       )
         .then(res => res.json())
         .then(result => {
-          address = result.results[0].address_components[1].long_name;
-          setGeoLocation(address);
+          setGeoLocation(result.results[0].address_components[1].long_name);
         });
     });
   }, []);
