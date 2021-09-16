@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react';
 import AppContext from '../lib/app-context';
 import { Home, Chat, Add, Favorite, Person } from '@material-ui/icons';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import {
   makeStyles,
   BottomNavigation,
@@ -14,7 +14,6 @@ import TopAppBar from './top-appbar';
 
 const useStyles = makeStyles(theme => {
   return {
-
     page: {
       paddingTop: theme.spacing(10),
       paddingBottom: theme.spacing(10)
@@ -26,9 +25,6 @@ const useStyles = makeStyles(theme => {
       position: 'fixed',
       top: 'auto',
       bottom: '0'
-    },
-    active: {
-      backgroundColor: '#EEEEEE'
     }
   };
 });
@@ -37,14 +33,14 @@ export default function Layout({ children }) {
   const { pageTitle, setPageTitle } = useContext(AppContext);
 
   const classes = useStyles();
-  const location = useLocation();
+
   const history = useHistory();
 
   const [value, setValue] = useState(pageTitle);
 
   useEffect(() => {
     setValue(pageTitle);
-  }, []);
+  }, [pageTitle]);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -90,28 +86,27 @@ export default function Layout({ children }) {
 
       <div className={classes.page}>{children}</div>
 
-      <Container maxWidth="sm">
-        <AppBar className={classes.bottomAppBar}>
-          <BottomNavigation
-            value={value}
-            onChange={handleChange}
-            className={classes.bottomNav}
-          >
-            {menuItems.map(item => (
-              <BottomNavigationAction
-                key={item.label}
-                label={item.label}
-                value={item.value}
-                icon={item.icon}
-                onClick={() => history.push(item.path)}
-                className={
-                  location.pathname === item.path ? classes.active : null
-                }
-              />
-            ))}
-          </BottomNavigation>
-        </AppBar>
-      </Container>
+      {pageTitle !== 'Details' && (
+        <Container maxWidth="sm">
+          <AppBar className={classes.bottomAppBar}>
+            <BottomNavigation
+              value={value}
+              onChange={handleChange}
+              className={classes.bottomNav}
+            >
+              {menuItems.map(item => (
+                <BottomNavigationAction
+                  key={item.label}
+                  label={item.label}
+                  value={item.value}
+                  icon={item.icon}
+                  onClick={() => history.push(item.path)}
+                />
+              ))}
+            </BottomNavigation>
+          </AppBar>
+        </Container>
+      )}
     </div>
   );
 }

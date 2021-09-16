@@ -2,6 +2,7 @@ import React, { useEffect, useState, useContext } from 'react';
 import AppContext from '../lib/app-context';
 import { Grid, Container, makeStyles } from '@material-ui/core';
 import Post from '../components/post';
+import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles(theme => {
   return {
@@ -30,7 +31,12 @@ export default function Home() {
       <Grid container spacing={1}>
         {posts.map(post => (
           <Grid item key={post.postId} xs={12} sm={6} md={3}>
-            <Post post={post} />
+            <Link
+              to={`/post?postId=${post.postId}`}
+              style={{ textDecoration: 'none' }}
+            >
+              <Post post={post} />
+            </Link>
           </Grid>
         ))}
       </Grid>

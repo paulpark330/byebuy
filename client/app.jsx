@@ -5,6 +5,7 @@ import NewPost from './pages/new-post';
 import Chat from './pages/chat';
 import Favorites from './pages/favorites';
 import Profile from './pages/profile';
+import Details from './pages/details';
 import { createTheme, ThemeProvider } from '@material-ui/core';
 
 import AppContext from './lib/app-context';
@@ -42,11 +43,11 @@ function App() {
       const long = position.coords.longitude;
       let address = '';
       fetch(
-        `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${long}&key=${process.env.GEOCODE}`
+        `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${long}&result_type=postal_code&key=${process.env.GEOCODE}`
       )
         .then(res => res.json())
         .then(result => {
-          address = result.results[0].address_components[3].long_name;
+          address = result.results[0].address_components[1].long_name;
           setGeoLocation(address);
         });
     });
@@ -77,6 +78,9 @@ function App() {
               </Route>
               <Route path="/search">
                 <Search />
+              </Route>
+              <Route>
+                <Details path="/post" />
               </Route>
             </Switch>
           </Layout>

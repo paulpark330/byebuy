@@ -86,6 +86,31 @@ app.get('/api/search', (req, res, next) => {
     .catch(err => next(err));
 });
 
+app.get('/api/post/:postId', (req, res, next) => {
+  const postId = parseInt(req.params.postId, 10);
+  if (!Number.isInteger(postId) || postId < 1) {
+    throw new ClientError(
+      400,
+      'postId must be a positive integer'
+    );
+  }
+  const sql = `
+  select "userId", "postId", "title", "category", "price", "description", "location",
+         "pictureId", "url", "nickname"
+    from "posts"
+    join "pictures" using ("postId")
+    join "users" using ("userId")
+    where "postId" = $1
+  `;
+  const params = [postId];
+  db.query(sql, params)
+    .then(result => {
+      const [post] = result.rows;
+      res.status(201).json(post);
+    })
+    .catch(err => next(err));
+});
+
 app.listen(process.env.PORT, () => {
   // eslint-disable-next-line no-console
   console.log(`express server listening on port ${process.env.PORT}`);
