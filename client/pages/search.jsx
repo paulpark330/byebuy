@@ -9,7 +9,7 @@ import {
 } from '@material-ui/core';
 import Post from '../components/post';
 import { Search as SearchIcon } from '@material-ui/icons';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useHistory, useLocation, Link } from 'react-router-dom';
 
 const useStyles = makeStyles(theme => {
   return {
@@ -82,7 +82,12 @@ export default function Search() {
           <Grid container spacing={1}>
             {results.map(post => (
               <Grid item key={post.postId} xs={12} sm={6} md={3}>
-                <Post post={post} />
+                <Link
+                  to={`/post?postId=${post.postId}`}
+                  style={{ textDecoration: 'none' }}
+                >
+                  <Post post={post} />
+                </Link>
               </Grid>
             ))}
           </Grid>

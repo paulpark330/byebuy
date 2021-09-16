@@ -1,9 +1,11 @@
 import React, { useContext } from 'react';
-import AppContext from '../lib/app-context';
+import { useHistory } from 'react-router-dom';
+
+import { Typography, IconButton, AppBar, Toolbar } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { ArrowBack, Search } from '@material-ui/icons/';
-import { useHistory } from 'react-router-dom';
-import { Typography, IconButton, AppBar, Toolbar } from '@material-ui/core';
+
+import AppContext from '../lib/app-context';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -20,7 +22,8 @@ const useStyles = makeStyles(theme => ({
   },
   icon: {
     fontSize: 30,
-    color: 'white'
+    color: 'primary',
+    zIndex: '10'
   },
   closeIcon: {
     fontSize: 30,
@@ -42,25 +45,25 @@ export default function TopAppBar() {
 
   return (
     <div className={classes.root}>
-      <AppBar className={classes.appBar} elevation={1} position="fixed">
-        <Toolbar>
-          <Typography variant="h5" component="h1" className={classes.title}>
-            {pageTitle}
-          </Typography>
-          <div>
-            {pageTitle === 'Home' && (
-              <IconButton onClick={() => history.push('/search')}>
-                <Search className={classes.icon} />
-              </IconButton>
-            )}
-            {pageTitle === 'Search' && (
-              <IconButton onClick={() => history.push('/')}>
-                <ArrowBack className={classes.icon} />
-              </IconButton>
-            )}
-          </div>
-        </Toolbar>
-      </AppBar>
+        <AppBar className={classes.appBar} elevation={1} position="fixed">
+          <Toolbar>
+            <Typography variant="h5" component="h1" className={classes.title}>
+              {pageTitle}
+            </Typography>
+            <div>
+              {pageTitle === 'Home' && (
+                <IconButton onClick={() => history.push('/search')}>
+                  <Search className={classes.icon} />
+                </IconButton>
+              )}
+              {pageTitle === 'Search' && (
+                <IconButton onClick={() => history.push('/')}>
+                  <ArrowBack className={classes.icon} />
+                </IconButton>
+              )}
+            </div>
+          </Toolbar>
+        </AppBar>
     </div>
   );
 }

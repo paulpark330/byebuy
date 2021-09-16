@@ -26,22 +26,23 @@ export default function Post({ post }) {
   const classes = useStyles();
   return (
     <div>
-      <Card elevation={1} className={classes.root}>
-        <CardMedia
-          className={classes.cover}
-          image={post.url !== null ? post.url : '/images/null.png'}
-        />
-        <div>
-          <CardHeader
-            className={classes.title}
-            title={post.title}
-            subheader={`$${post.price}`}
+        <Card elevation={1} className={classes.root}>
+          <CardMedia
+            className={classes.cover}
+            image={post.url !== null ? post.url : '/images/null.png'}
           />
-          <CardContent className={classes.location}>
-            <Typography variant="body2">{post.location}</Typography>
-          </CardContent>
-        </div>
-      </Card>
+          <div>
+            <CardHeader
+              className={classes.title}
+              title={post.title}
+              titleTypographyProps={{ variant: 'h6' }}
+              subheader={`$${post.price}`}
+            />
+            <CardContent className={classes.location}>
+              <Typography variant="body2">{post.location}</Typography>
+            </CardContent>
+          </div>
+        </Card>
     </div>
   );
 
