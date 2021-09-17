@@ -94,7 +94,7 @@ export default function Auth() {
         <Typography variant="h1" className={classes.logo} gutterBottom>
           byebuy
         </Typography>
-        <AuthForm action={route} />
+        <AuthForm props={{ route, setRoute }}/>
         {renderWelcome()}
       </Container>
     </div>

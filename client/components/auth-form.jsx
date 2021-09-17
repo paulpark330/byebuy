@@ -50,8 +50,9 @@ export default function AuthForm(props) {
   });
   const [usernameError, setUsernameError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
-
   const [visibility, setVisibility] = useState(false);
+
+  const { route, setRoute } = props.props;
 
   const handleChange = prop => e => {
     setFormValues({ ...formValues, [prop]: e.target.value });
@@ -81,10 +82,10 @@ export default function AuthForm(props) {
         method: 'POST',
         body: newAccount
       };
-      fetch(`/api${props.action}`, init)
+      fetch(`/api${route}`, init)
         .then(res => res.json())
         .then(user => {
-          if (props.action === '/auth/sign-up') {
+          if (route === '/auth/sign-up') {
             init = {
               method: 'POST',
               headers: {
@@ -104,6 +105,7 @@ export default function AuthForm(props) {
               .then(res => res.json())
               .then(result => {
                 e.target.reset();
+                setRoute('/auth/sign-in');
                 history.push('/auth/sign-in');
               });
           } else if (user.user && user.token) {
@@ -187,7 +189,7 @@ export default function AuthForm(props) {
             endIcon={<KeyboardArrowRight />}
             size="large"
           >
-            REGISTER
+            {route === '/auth/sign-in' ? 'SIGN IN' : 'SIGN UP'}
           </Button>
         </form>
       </Container>
