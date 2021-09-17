@@ -1,5 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Redirect
+} from 'react-router-dom';
 
 import Home from './pages/home';
 import Chat from './pages/chat';
@@ -92,48 +97,49 @@ function App() {
   const renderPage = () => {
     return (
       <div>
-        {username
-          ? (
-          <div>
-            <Route exact path="/">
+        <Route exact path="/">
+          {username
+            ? (
+            <div>
               <TopAppBar />
               <Home />
-              <BottomNavBar />
-            </Route>
-            <Route path="/new-post">
-              <TopAppBar />
-              <NewPost />
-              <BottomNavBar />
-            </Route>
-            <Route path="/chat">
-              <TopAppBar />
-              <Chat />
-              <BottomNavBar />
-            </Route>
-            <Route path="/favorites">
-              <TopAppBar />
-              <Favorites />
-              <BottomNavBar />
-            </Route>
-            <Route path="/profile">
-              <TopAppBar />
-              <Profile />
-              <BottomNavBar />
-            </Route>
-            <Route path="/search">
-              <TopAppBar />
-              <Search />
-            </Route>
-            <Route path="/post">
-              <Details />
-            </Route>
-          </div>
-            )
-          : (
-          <Route path="/auth">
-            <Auth />
-          </Route>
-            )}
+              <BottomNavBar />{' '}
+            </div>
+              )
+            : (
+            <Redirect to="/auth" />
+              )}
+        </Route>
+        <Route path="/new-post">
+          <TopAppBar />
+          <NewPost />
+          <BottomNavBar />
+        </Route>
+        <Route path="/chat">
+          <TopAppBar />
+          <Chat />
+          <BottomNavBar />
+        </Route>
+        <Route path="/favorites">
+          <TopAppBar />
+          <Favorites />
+          <BottomNavBar />
+        </Route>
+        <Route path="/profile">
+          <TopAppBar />
+          <Profile />
+          <BottomNavBar />
+        </Route>
+        <Route path="/search">
+          <TopAppBar />
+          <Search />
+        </Route>
+        <Route path="/post">
+          <Details />
+        </Route>
+        <Route path="/auth">
+          <Auth />
+        </Route>
       </div>
     );
   };

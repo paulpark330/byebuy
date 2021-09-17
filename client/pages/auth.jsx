@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import AuthForm from '../components/auth-form';
 import { Container, makeStyles, Typography } from '@material-ui/core';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 const useStyles = makeStyles(theme => {
   return {
@@ -35,20 +35,12 @@ const useStyles = makeStyles(theme => {
 
 export default function Auth() {
   const classes = useStyles();
-  const [route, setRoute] = useState(window.location.pathname);
-
-  const handleClick = () => {
-    if (route === '/auth/sign-up') {
-      setRoute('/auth/sign-in');
-    } else {
-      setRoute('/auth/sign-up');
-    }
-  };
+  const location = useLocation();
 
   const renderWelcome = () => {
     return (
       <div>
-        {route === '/auth/sign-up'
+        {location.pathname === '/auth/sign-up'
           ? (
           <Typography variant="body1" className={classes.text}>
             Have an Account? |{' '}
@@ -60,7 +52,6 @@ export default function Auth() {
                 fontWeight: 700
               }}
               className={classes.signup}
-              onClick={handleClick}
             >
               Sign in
             </Link>
@@ -77,7 +68,6 @@ export default function Auth() {
                 fontWeight: 700
               }}
               className={classes.signup}
-              onClick={handleClick}
             >
               Sign up
             </Link>
@@ -94,7 +84,7 @@ export default function Auth() {
         <Typography variant="h1" className={classes.logo} gutterBottom>
           byebuy
         </Typography>
-        <AuthForm props={{ route, setRoute }}/>
+        <AuthForm/>
         {renderWelcome()}
       </Container>
     </div>

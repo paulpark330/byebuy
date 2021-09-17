@@ -15,7 +15,7 @@ import {
   Visibility,
   VisibilityOff
 } from '@material-ui/icons';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 
 const useStyles = makeStyles(theme => {
   return {
@@ -44,6 +44,7 @@ export default function AuthForm(props) {
   const { handleSignIn } = useContext(AppContext);
   const classes = useStyles();
   const history = useHistory();
+  const location = useLocation();
   const [formValues, setFormValues] = useState({
     username: '',
     password: ''
@@ -51,8 +52,6 @@ export default function AuthForm(props) {
   const [usernameError, setUsernameError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
   const [visibility, setVisibility] = useState(false);
-
-  const { route, setRoute } = props.props;
 
   const handleChange = prop => e => {
     setFormValues({ ...formValues, [prop]: e.target.value });
@@ -82,10 +81,10 @@ export default function AuthForm(props) {
         method: 'POST',
         body: newAccount
       };
-      fetch(`/api${route}`, init)
+      fetch(`/api${location.pathname}`, init)
         .then(res => res.json())
         .then(user => {
-          if (route === '/auth/sign-up') {
+          if (location.pathname === '/auth/sign-up') {
             init = {
               method: 'POST',
               headers: {
@@ -105,7 +104,6 @@ export default function AuthForm(props) {
               .then(res => res.json())
               .then(result => {
                 e.target.reset();
-                setRoute('/auth/sign-in');
                 history.push('/auth/sign-in');
               });
           } else if (user.user && user.token) {
@@ -189,7 +187,7 @@ export default function AuthForm(props) {
             endIcon={<KeyboardArrowRight />}
             size="large"
           >
-            {route === '/auth/sign-up' ? 'SIGN UP' : 'SIGN IN'}
+            {location.pathname === '/auth/sign-up' ? 'SIGN UP' : 'SIGN IN'}
           </Button>
         </form>
       </Container>
