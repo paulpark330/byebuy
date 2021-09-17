@@ -5,20 +5,11 @@ import {
   Route,
   Redirect
 } from 'react-router-dom';
-
-import Home from './pages/home';
-import Chat from './pages/chat';
-import NewPost from './pages/new-post';
-import Favorites from './pages/favorites';
-import Profile from './pages/profile';
-import Details from './pages/details';
-import Search from './pages/search';
+import Pages from './pages/pages';
 import Auth from './pages/auth';
 import decodeToken from './lib/decode-token';
 
-import TopAppBar from './components/top-appbar';
-import Page from './components/page';
-import BottomNavBar from './components/bottom-navbar';
+import Layout from './components/layout';
 
 import { createTheme, ThemeProvider } from '@material-ui/core';
 
@@ -77,7 +68,8 @@ function App() {
   const handleSignIn = result => {
     const { user, token } = result;
     window.localStorage.setItem('react-context-jwt', token);
-    setUsername(user);
+    setUsername(user.nickname);
+    setUserId(user.userId);
   };
 
   const handleSignOut = () => {
@@ -97,95 +89,8 @@ function App() {
   const renderPage = () => {
     return (
       <div>
-        <Route exact path="/">
-          {username
-            ? (
-            <div>
-              <TopAppBar />
-              <Home />
-              <BottomNavBar />{' '}
-            </div>
-              )
-            : (
-            <Redirect to="/auth" />
-              )}
-        </Route>
-        <Route path="/new-post">
-          {username
-            ? (
-            <div>
-              <TopAppBar />
-              <NewPost />
-              <BottomNavBar />
-            </div>
-              )
-            : (
-            <Redirect to="/auth" />
-              )}
-        </Route>
-        <Route path="/chat">
-          {username
-            ? (
-            <div>
-              <TopAppBar />
-              <Chat />
-              <BottomNavBar />
-            </div>
-              )
-            : (
-            <Redirect to="/auth" />
-              )}
-        </Route>
-        <Route path="/favorites">
-          {username
-            ? (
-            <div>
-              <TopAppBar />
-              <Favorites />
-              <BottomNavBar />
-            </div>
-              )
-            : (
-            <Redirect to="/auth" />
-              )}
-        </Route>
-        <Route path="/profile">
-          {username
-            ? (
-            <div>
-              <TopAppBar />
-              <Profile />
-              <BottomNavBar />
-            </div>
-              )
-            : (
-            <Redirect to="/auth" />
-              )}
-        </Route>
-        <Route path="/search">
-          {username
-            ? (
-            <div>
-              <TopAppBar />
-              <Search />
-            </div>
-              )
-            : (
-            <Redirect to="/auth" />
-              )}
-        </Route>
-        <Route path="/post">
-          {username
-            ? (
-            <div>
-              <Details />
-            </div>
-              )
-            : (
-            <Redirect to="/auth" />
-              )}
-        </Route>
-        <Route path="/auth">
+          <Pages />
+        <Route path="/auth/sign-in">
           {!username
             ? (
             <div>
@@ -205,7 +110,7 @@ function App() {
       <ThemeProvider theme={theme}>
         <Router>
           <Switch>
-            <Page>{renderPage()}</Page>
+            <Layout>{renderPage()}</Layout>
           </Switch>
         </Router>
       </ThemeProvider>
