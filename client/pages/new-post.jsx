@@ -18,15 +18,17 @@ import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import { useHistory } from 'react-router-dom';
 
-const useStyles = makeStyles({
-  field: {
-    marginTop: 20,
-    marginBottom: 20,
-    display: 'flex'
-  },
-  button: {
-    color: 'white'
-  }
+const useStyles = makeStyles(theme => {
+  return {
+    field: {
+      marginTop: theme.spacing(2),
+      marginBottom: theme.spacing(2),
+      display: 'flex'
+    },
+    button: {
+      color: 'white'
+    }
+  };
 });
 
 const theme = createTheme({

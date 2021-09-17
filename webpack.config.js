@@ -49,6 +49,6 @@ module.exports = {
     hints: false
   },
   plugins: [
-    new EnvironmentPlugin(['GEOCODE'])
+    new EnvironmentPlugin(['GEOCODE', 'APP_ID', 'API_TOKEN'])
   ]
 };
