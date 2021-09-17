@@ -1,5 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Redirect
+} from 'react-router-dom';
 
 import Home from './pages/home';
 import Chat from './pages/chat';
@@ -9,6 +14,7 @@ import Profile from './pages/profile';
 import Details from './pages/details';
 import Search from './pages/search';
 import Auth from './pages/auth';
+import decodeToken from './lib/decode-token';
 
 import TopAppBar from './components/top-appbar';
 import Page from './components/page';
@@ -40,7 +46,8 @@ const theme = createTheme({
 });
 
 function App() {
-  const [userId] = useState(0);
+  const [userId, setUserId] = useState(null);
+  const [username, setUsername] = useState(null);
   const [geoLocation, setGeoLocation] = useState('');
   const [pageTitle, setPageTitle] = useState('');
 
@@ -58,13 +65,50 @@ function App() {
     });
   }, []);
 
+  useEffect(() => {
+    const token = window.localStorage.getItem('react-context-jwt');
+    const user = token ? decodeToken(token) : null;
+    if (user) {
+      setUsername(user.nickname);
+      setUserId(user.userId);
+    }
+  }, []);
+
+  const handleSignIn = result => {
+    const { user, token } = result;
+    window.localStorage.setItem('react-context-jwt', token);
+    setUsername(user);
+  };
+
+  const handleSignOut = () => {
+    window.localStorage.removeItem('react-context-jwt');
+    setUsername(null);
+  };
+
+  const contextValue = {
+    username,
+    userId,
+    geoLocation,
+    setPageTitle,
+    pageTitle,
+    handleSignIn,
+    handleSignOut
+  };
   const renderPage = () => {
     return (
-      <Switch>
+      <div>
         <Route exact path="/">
-          <TopAppBar />
-          <Home />
-          <BottomNavBar />
+          {username
+            ? (
+            <div>
+              <TopAppBar />
+              <Home />
+              <BottomNavBar />{' '}
+            </div>
+              )
+            : (
+            <Redirect to="/auth" />
+              )}
         </Route>
         <Route path="/new-post">
           <TopAppBar />
@@ -90,25 +134,23 @@ function App() {
           <TopAppBar />
           <Search />
         </Route>
-        <Route>
-          <Details path="/post" />
+        <Route path="/post">
+          <Details />
         </Route>
-      </Switch>
+        <Route path="/auth">
+          <Auth />
+        </Route>
+      </div>
     );
   };
-
-  const contextValue = { userId, geoLocation, setPageTitle, pageTitle };
 
   return (
     <AppContext.Provider value={contextValue}>
       <ThemeProvider theme={theme}>
         <Router>
-          <Page>
-            {/* {renderPage()} */}
-            <Route path="/signup">
-              <Auth />
-            </Route>
-          </Page>
+          <Switch>
+            <Page>{renderPage()}</Page>
+          </Switch>
         </Router>
       </ThemeProvider>
     </AppContext.Provider>

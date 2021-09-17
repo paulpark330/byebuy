@@ -1,7 +1,7 @@
-import React, { useEffect, useContext } from 'react';
-import AppContext from '../lib/app-context';
+import React from 'react';
 import AuthForm from '../components/auth-form';
 import { Container, makeStyles, Typography } from '@material-ui/core';
+import { Link, useLocation } from 'react-router-dom';
 
 const useStyles = makeStyles(theme => {
   return {
@@ -21,10 +21,11 @@ const useStyles = makeStyles(theme => {
     },
     text: {
       color: theme.palette.primary.light,
-      fontWeight: 300,
-      position: 'relative',
-      textAlign: 'center',
-      marginTop: theme.spacing(4)
+      position: 'absolute',
+      bottom: theme.spacing(6),
+      left: 0,
+      right: 0,
+      textAlign: 'center'
     },
     signup: {
       fontWeight: 500
@@ -33,12 +34,48 @@ const useStyles = makeStyles(theme => {
 });
 
 export default function Auth() {
-  const { setPageTitle } = useContext(AppContext);
   const classes = useStyles();
+  const location = useLocation();
 
-  useEffect(() => {
-    setPageTitle('Auth');
-  }, []);
+  const renderWelcome = () => {
+    return (
+      <div>
+        {location.pathname === '/auth/sign-up'
+          ? (
+          <Typography variant="body1" className={classes.text}>
+            Have an Account? |{' '}
+            <Link
+              to={'/auth/sign-in'}
+              style={{
+                textDecoration: 'none',
+                color: 'white',
+                fontWeight: 700
+              }}
+              className={classes.signup}
+            >
+              Sign in
+            </Link>
+          </Typography>
+            )
+          : (
+          <Typography variant="body1" className={classes.text}>
+            Don&apos;t an Account? |{' '}
+            <Link
+              to={'/auth/sign-up'}
+              style={{
+                textDecoration: 'none',
+                color: 'white',
+                fontWeight: 700
+              }}
+              className={classes.signup}
+            >
+              Sign up
+            </Link>
+          </Typography>
+            )}
+      </div>
+    );
+  };
 
   return (
     <div>
@@ -47,11 +84,8 @@ export default function Auth() {
         <Typography variant="h1" className={classes.logo} gutterBottom>
           byebuy
         </Typography>
-        <AuthForm />
-        <Typography variant="body1" className={classes.text}>
-          Haven an Account? |{' '}
-          <span className={classes.signup}>Sign in</span>
-        </Typography>
+        <AuthForm/>
+        {renderWelcome()}
       </Container>
     </div>
   );

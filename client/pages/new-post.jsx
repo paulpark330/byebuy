@@ -73,7 +73,7 @@ const theme = createTheme({
 export default function NewPost() {
   const history = useHistory();
   const classes = useStyles();
-  const { userId, geoLocation, setPageTitle } = useContext(AppContext);
+  const { username, userId, geoLocation, setPageTitle } = useContext(AppContext);
   const [formValues, setFormValues] = useState({
     title: '',
     category: '',
@@ -114,6 +114,7 @@ export default function NewPost() {
     setPriceError(false);
     const newPost = new FormData(event.target);
     newPost.append('image', files[0]);
+    newPost.append('username', username);
     newPost.append('userId', userId);
     newPost.append('location', geoLocation);
     newPost.set('price', formValues.price);

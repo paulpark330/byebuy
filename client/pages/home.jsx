@@ -14,9 +14,9 @@ const useStyles = makeStyles(theme => {
 });
 
 export default function Home() {
-  const classes = useStyles();
   const { setPageTitle } = useContext(AppContext);
 
+  const classes = useStyles();
   const [posts, setPosts] = useState([]);
 
   useEffect(() => {
