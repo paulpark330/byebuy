@@ -189,7 +189,7 @@ export default function AuthForm(props) {
             endIcon={<KeyboardArrowRight />}
             size="large"
           >
-            {route === '/auth/sign-in' ? 'SIGN IN' : 'SIGN UP'}
+            {route === '/auth/sign-up' ? 'SIGN UP' : 'SIGN IN'}
           </Button>
         </form>
       </Container>
