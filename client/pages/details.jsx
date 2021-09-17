@@ -80,7 +80,12 @@ export default function Details() {
   useEffect(() => {
     const postId = query.get('postId');
     setPageTitle('Details');
-    fetch(`/api/post/${postId}`)
+    const init = {
+      headers: {
+        'X-Access-Token': window.localStorage.getItem('react-context-jwt')
+      }
+    };
+    fetch(`/api/post/${postId}`, init)
       .then(res => res.json())
       .then(post => {
         setpost(post);

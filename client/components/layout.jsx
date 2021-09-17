@@ -12,7 +12,7 @@ const useStyles = makeStyles(theme => {
   };
 });
 
-export default function Page({ children }) {
+export default function Layout({ children }) {
   const classes = useStyles();
   return (
     <div>

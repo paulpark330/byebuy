@@ -21,7 +21,12 @@ export default function Home() {
 
   useEffect(() => {
     setPageTitle('Home');
-    fetch('/api/home')
+    const init = {
+      headers: {
+        'X-Access-Token': window.localStorage.getItem('react-context-jwt')
+      }
+    };
+    fetch('/api/home', init)
       .then(res => res.json())
       .then(posts => setPosts(posts));
   }, []);

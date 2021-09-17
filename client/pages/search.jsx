@@ -38,7 +38,12 @@ export default function Search() {
   }, []);
 
   useEffect(() => {
-    fetch(`api/search${location.search}`)
+    const init = {
+      headers: {
+        'X-Access-Token': window.localStorage.getItem('react-context-jwt')
+      }
+    };
+    fetch(`api/search${location.search}`, init)
       .then(res => res.json())
       .then(result => setResults(result));
   }, [location.search]);

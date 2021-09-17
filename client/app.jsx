@@ -5,20 +5,11 @@ import {
   Route,
   Redirect
 } from 'react-router-dom';
-
-import Home from './pages/home';
-import Chat from './pages/chat';
-import NewPost from './pages/new-post';
-import Favorites from './pages/favorites';
-import Profile from './pages/profile';
-import Details from './pages/details';
-import Search from './pages/search';
+import Pages from './pages/pages';
 import Auth from './pages/auth';
 import decodeToken from './lib/decode-token';
 
-import TopAppBar from './components/top-appbar';
-import Page from './components/page';
-import BottomNavBar from './components/bottom-navbar';
+import Layout from './components/layout';
 
 import { createTheme, ThemeProvider } from '@material-ui/core';
 
@@ -77,7 +68,8 @@ function App() {
   const handleSignIn = result => {
     const { user, token } = result;
     window.localStorage.setItem('react-context-jwt', token);
-    setUsername(user);
+    setUsername(user.nickname);
+    setUserId(user.userId);
   };
 
   const handleSignOut = () => {
@@ -97,48 +89,17 @@ function App() {
   const renderPage = () => {
     return (
       <div>
-        <Route exact path="/">
-          {username
+          <Pages />
+        <Route path="/auth">
+          {!username
             ? (
             <div>
-              <TopAppBar />
-              <Home />
-              <BottomNavBar />{' '}
+              <Auth />
             </div>
               )
             : (
-            <Redirect to="/auth" />
+            <Redirect to="/" />
               )}
-        </Route>
-        <Route path="/new-post">
-          <TopAppBar />
-          <NewPost />
-          <BottomNavBar />
-        </Route>
-        <Route path="/chat">
-          <TopAppBar />
-          <Chat />
-          <BottomNavBar />
-        </Route>
-        <Route path="/favorites">
-          <TopAppBar />
-          <Favorites />
-          <BottomNavBar />
-        </Route>
-        <Route path="/profile">
-          <TopAppBar />
-          <Profile />
-          <BottomNavBar />
-        </Route>
-        <Route path="/search">
-          <TopAppBar />
-          <Search />
-        </Route>
-        <Route path="/post">
-          <Details />
-        </Route>
-        <Route path="/auth">
-          <Auth />
         </Route>
       </div>
     );
@@ -149,7 +110,7 @@ function App() {
       <ThemeProvider theme={theme}>
         <Router>
           <Switch>
-            <Page>{renderPage()}</Page>
+            <Layout>{renderPage()}</Layout>
           </Switch>
         </Router>
       </ThemeProvider>

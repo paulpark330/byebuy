@@ -8,6 +8,7 @@ const uploadsMiddleware = require('./uploads-middleware');
 const argon2 = require('argon2');
 const jsonMiddleware = express.json();
 const jwt = require('jsonwebtoken');
+const authorizationMiddleware = require('./authorization-middleware');
 
 const db = new pg.Pool({
   connectionString: process.env.DATABASE_URL,
@@ -115,6 +116,8 @@ app.post('/api/auth/sign-in', uploadsMiddleware, (req, res, next) => {
     })
     .catch(err => next(err));
 });
+
+app.use(authorizationMiddleware);
 
 app.get('/api/home', (req, res, next) => {
   const sql = `
