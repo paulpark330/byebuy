@@ -85,7 +85,7 @@ export default function AuthForm() {
           )
             .then(res => res.json())
             .then(result => {
-              document.querySelector('#auth-form').reset();
+              e.target.reset();
             });
         })
         .catch(err => console.error(err));
