@@ -10,6 +10,7 @@ import {
 } from '@material-ui/core';
 import {
   AccountCircle,
+  AlternateEmail,
   KeyboardArrowRight,
   Lock,
   Visibility,
@@ -47,9 +48,11 @@ export default function AuthForm(props) {
   const location = useLocation();
   const [formValues, setFormValues] = useState({
     username: '',
+    email: '',
     password: ''
   });
   const [usernameError, setUsernameError] = useState(false);
+  const [emailError, setEmailError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
   const [visibility, setVisibility] = useState(false);
 
@@ -65,6 +68,7 @@ export default function AuthForm(props) {
     e.preventDefault();
     setUsernameError(false);
     setPasswordError(false);
+    setEmailError(false);
 
     const newAccount = new FormData(e.target);
 
@@ -76,7 +80,11 @@ export default function AuthForm(props) {
       setPasswordError(true);
     }
 
-    if (formValues.username && formValues.password) {
+    if (formValues.email === '') {
+      setEmailError(true);
+    }
+
+    if (formValues.username && formValues.password && formValues.email) {
       let init = {
         method: 'POST',
         body: newAccount
@@ -87,6 +95,7 @@ export default function AuthForm(props) {
           if (user.error) {
             setUsernameError(true);
             setPasswordError(true);
+            setEmailError(true);
           }
           if (location.pathname === '/auth/sign-up') {
             init = {
@@ -127,6 +136,34 @@ export default function AuthForm(props) {
           autoComplete="off"
           onSubmit={handleSubmit}
         >
+          {location.pathname === '/auth/sign-up'
+            ? (
+            <TextField
+              className={classes.field}
+              label="Email"
+              variant="outlined"
+              color="secondary"
+              fullWidth
+              required
+              name="email"
+              error={emailError}
+              onChange={handleChange('email')}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <AlternateEmail className={classes.icon} />
+                  </InputAdornment>
+                ),
+                classes: {
+                  input: classes.input
+                }
+              }}
+            />
+              )
+            : (
+                null
+              )}
+
           <TextField
             className={classes.field}
             label="Username"
@@ -134,6 +171,7 @@ export default function AuthForm(props) {
             color="secondary"
             fullWidth
             required
+            type="email"
             name="username"
             error={usernameError}
             onChange={handleChange('username')}
