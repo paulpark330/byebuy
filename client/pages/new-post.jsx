@@ -134,6 +134,9 @@ export default function NewPost() {
     if (formValues.title && formValues.category && formValues.price) {
       const init = {
         method: 'POST',
+        headers: {
+          'X-Access-Token': window.localStorage.getItem('react-context-jwt')
+        },
         body: newPost
       };
       fetch('/api/new-post', init)

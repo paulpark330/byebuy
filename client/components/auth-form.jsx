@@ -84,7 +84,7 @@ export default function AuthForm(props) {
       setEmailError(true);
     }
 
-    if (formValues.username && formValues.password && formValues.email) {
+    if (formValues.username && formValues.password) {
       let init = {
         method: 'POST',
         body: newAccount

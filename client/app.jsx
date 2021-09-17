@@ -111,34 +111,90 @@ function App() {
               )}
         </Route>
         <Route path="/new-post">
-          <TopAppBar />
-          <NewPost />
-          <BottomNavBar />
+          {username
+            ? (
+            <div>
+              <TopAppBar />
+              <NewPost />
+              <BottomNavBar />
+            </div>
+              )
+            : (
+            <Redirect to="/auth" />
+              )}
         </Route>
         <Route path="/chat">
-          <TopAppBar />
-          <Chat />
-          <BottomNavBar />
+          {username
+            ? (
+            <div>
+              <TopAppBar />
+              <Chat />
+              <BottomNavBar />
+            </div>
+              )
+            : (
+            <Redirect to="/auth" />
+              )}
         </Route>
         <Route path="/favorites">
-          <TopAppBar />
-          <Favorites />
-          <BottomNavBar />
+          {username
+            ? (
+            <div>
+              <TopAppBar />
+              <Favorites />
+              <BottomNavBar />
+            </div>
+              )
+            : (
+            <Redirect to="/auth" />
+              )}
         </Route>
         <Route path="/profile">
-          <TopAppBar />
-          <Profile />
-          <BottomNavBar />
+          {username
+            ? (
+            <div>
+              <TopAppBar />
+              <Profile />
+              <BottomNavBar />
+            </div>
+              )
+            : (
+            <Redirect to="/auth" />
+              )}
         </Route>
         <Route path="/search">
-          <TopAppBar />
-          <Search />
+          {username
+            ? (
+            <div>
+              <TopAppBar />
+              <Search />
+            </div>
+              )
+            : (
+            <Redirect to="/auth" />
+              )}
         </Route>
         <Route path="/post">
-          <Details />
+          {username
+            ? (
+            <div>
+              <Details />
+            </div>
+              )
+            : (
+            <Redirect to="/auth" />
+              )}
         </Route>
         <Route path="/auth">
-          <Auth />
+          {!username
+            ? (
+            <div>
+              <Auth />
+            </div>
+              )
+            : (
+            <Redirect to="/" />
+              )}
         </Route>
       </div>
     );
