@@ -12,7 +12,7 @@ export default function Profile() {
 
   const handleClick = () => {
     handleSignOut();
-    history.push('/auth/sign-in');
+    history.push('/auth');
   };
 
   return (

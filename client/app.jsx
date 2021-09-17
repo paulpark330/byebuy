@@ -130,7 +130,7 @@ function App() {
           </div>
             )
           : (
-          <Route path="/auth/sign-in">
+          <Route path="/auth">
             <Auth />
           </Route>
             )}
