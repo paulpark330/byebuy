@@ -1,6 +1,21 @@
-import React, { useState } from 'react';
-import { Container, makeStyles, TextField, InputAdornment, IconButton, Button } from '@material-ui/core';
-import { AccountCircle, KeyboardArrowRight, Lock, Visibility, VisibilityOff } from '@material-ui/icons';
+import React, { useState, useContext } from 'react';
+import AppContext from '../lib/app-context';
+import {
+  Container,
+  makeStyles,
+  TextField,
+  InputAdornment,
+  IconButton,
+  Button
+} from '@material-ui/core';
+import {
+  AccountCircle,
+  KeyboardArrowRight,
+  Lock,
+  Visibility,
+  VisibilityOff
+} from '@material-ui/icons';
+import { useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles(theme => {
   return {
@@ -25,13 +40,14 @@ const useStyles = makeStyles(theme => {
   };
 });
 
-export default function AuthForm() {
+export default function AuthForm(props) {
+  const { handleSignIn } = useContext(AppContext);
   const classes = useStyles();
+  const history = useHistory();
   const [formValues, setFormValues] = useState({
     username: '',
     password: ''
   });
-
   const [usernameError, setUsernameError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
 
@@ -65,28 +81,36 @@ export default function AuthForm() {
         method: 'POST',
         body: newAccount
       };
-      fetch('/api/register', init)
+      fetch(`/api${props.action}`, init)
         .then(res => res.json())
         .then(user => {
-          init = {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Api-Token': process.env.API_TOKEN
-            },
-            body: JSON.stringify({
-              user_id: user.userId,
-              nickname: user.nickname,
-              profile_url: ''
-            })
-          };
-          fetch(
-            `https://api-${process.env.APP_ID}.sendbird.com/v3/users`, init
-          )
-            .then(res => res.json())
-            .then(result => {
-              e.target.reset();
-            });
+          if (props.action === '/auth/sign-up') {
+            init = {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Api-Token': process.env.API_TOKEN
+              },
+              body: JSON.stringify({
+                user_id: user.userId,
+                nickname: user.nickname,
+                profile_url: ''
+              })
+            };
+            fetch(
+              `https://api-${process.env.APP_ID}.sendbird.com/v3/users`,
+              init
+            )
+              .then(res => res.json())
+              .then(result => {
+                e.target.reset();
+                history.push('/auth/sign-in');
+              });
+          } else if (user.user && user.token) {
+            handleSignIn(user);
+            history.push('/');
+
+          }
         })
         .catch(err => console.error(err));
     }

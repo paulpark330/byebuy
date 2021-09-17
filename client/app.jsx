@@ -9,6 +9,7 @@ import Profile from './pages/profile';
 import Details from './pages/details';
 import Search from './pages/search';
 import Auth from './pages/auth';
+import decodeToken from './lib/decode-token';
 
 import TopAppBar from './components/top-appbar';
 import Page from './components/page';
@@ -40,7 +41,8 @@ const theme = createTheme({
 });
 
 function App() {
-  const [userId] = useState(0);
+  const [userId, setUserId] = useState(null);
+  const [username, setUsername] = useState(null);
   const [geoLocation, setGeoLocation] = useState('');
   const [pageTitle, setPageTitle] = useState('');
 
@@ -58,57 +60,91 @@ function App() {
     });
   }, []);
 
-  const renderPage = () => {
-    return (
-      <Switch>
-        <Route exact path="/">
-          <TopAppBar />
-          <Home />
-          <BottomNavBar />
-        </Route>
-        <Route path="/new-post">
-          <TopAppBar />
-          <NewPost />
-          <BottomNavBar />
-        </Route>
-        <Route path="/chat">
-          <TopAppBar />
-          <Chat />
-          <BottomNavBar />
-        </Route>
-        <Route path="/favorites">
-          <TopAppBar />
-          <Favorites />
-          <BottomNavBar />
-        </Route>
-        <Route path="/profile">
-          <TopAppBar />
-          <Profile />
-          <BottomNavBar />
-        </Route>
-        <Route path="/search">
-          <TopAppBar />
-          <Search />
-        </Route>
-        <Route>
-          <Details path="/post" />
-        </Route>
-      </Switch>
-    );
+  useEffect(() => {
+    const token = window.localStorage.getItem('react-context-jwt');
+    const user = token ? decodeToken(token) : null;
+    if (user) {
+      setUsername(user.nickname);
+      setUserId(user.userId);
+    }
+  }, []);
+
+  const handleSignIn = result => {
+    const { user, token } = result;
+    window.localStorage.setItem('react-context-jwt', token);
+    setUsername(user);
   };
 
-  const contextValue = { userId, geoLocation, setPageTitle, pageTitle };
+  const handleSignOut = () => {
+    window.localStorage.removeItem('react-context-jwt');
+    setUsername(null);
+  };
+
+  const contextValue = {
+    username,
+    userId,
+    geoLocation,
+    setPageTitle,
+    pageTitle,
+    handleSignIn,
+    handleSignOut
+  };
+  const renderPage = () => {
+    return (
+      <div>
+        {username
+          ? (
+          <div>
+            <Route exact path="/">
+              <TopAppBar />
+              <Home />
+              <BottomNavBar />
+            </Route>
+            <Route path="/new-post">
+              <TopAppBar />
+              <NewPost />
+              <BottomNavBar />
+            </Route>
+            <Route path="/chat">
+              <TopAppBar />
+              <Chat />
+              <BottomNavBar />
+            </Route>
+            <Route path="/favorites">
+              <TopAppBar />
+              <Favorites />
+              <BottomNavBar />
+            </Route>
+            <Route path="/profile">
+              <TopAppBar />
+              <Profile />
+              <BottomNavBar />
+            </Route>
+            <Route path="/search">
+              <TopAppBar />
+              <Search />
+            </Route>
+            <Route path="/post">
+              <Details />
+            </Route>
+          </div>
+            )
+          : (
+          <Route path="/auth/sign-in">
+            <Auth />
+          </Route>
+            )}
+      </div>
+    );
+  };
 
   return (
     <AppContext.Provider value={contextValue}>
       <ThemeProvider theme={theme}>
         <Router>
-          <Page>
-            {/* {renderPage()} */}
-            <Route path="/signup">
-              <Auth />
-            </Route>
-          </Page>
+          <Switch>
+            <Page>{renderPage()}</Page>
+          </Switch>
         </Router>
       </ThemeProvider>
     </AppContext.Provider>
