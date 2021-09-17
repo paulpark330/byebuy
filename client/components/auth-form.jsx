@@ -84,6 +84,10 @@ export default function AuthForm(props) {
       fetch(`/api${location.pathname}`, init)
         .then(res => res.json())
         .then(user => {
+          if (user.error) {
+            setUsernameError(true);
+            setPasswordError(true);
+          }
           if (location.pathname === '/auth/sign-up') {
             init = {
               method: 'POST',
@@ -109,10 +113,8 @@ export default function AuthForm(props) {
           } else if (user.user && user.token) {
             handleSignIn(user);
             history.push('/');
-
           }
-        })
-        .catch(err => console.error(err));
+        });
     }
   };
 

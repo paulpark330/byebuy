@@ -22,8 +22,6 @@ app.use(jsonMiddleware);
 
 app.use(staticMiddleware);
 
-app.use(errorMiddleware);
-
 app.post('/api/new-post', uploadsMiddleware, (req, res, next) => {
   const { userId, title, category, price, description, location } = req.body;
   if (!title || !category) {
@@ -69,6 +67,8 @@ app.post('/api/auth/sign-up', uploadsMiddleware, (req, res, next) => {
       const sql = `
       insert into "users" ("nickname", "hashedPassword")
       values ($1, $2)
+      on conflict ("nickname")
+      do nothing
       returning "userId", "nickname"
       `;
       const params = [username, hashedPassword];
@@ -76,6 +76,9 @@ app.post('/api/auth/sign-up', uploadsMiddleware, (req, res, next) => {
     })
     .then(result => {
       const [user] = result.rows;
+      if (!user) {
+        throw new ClientError(400, 'username already exist');
+      }
       res.status(201).json(user);
     })
     .catch(err => next(err));
@@ -170,6 +173,8 @@ app.get('/api/post/:postId', (req, res, next) => {
     })
     .catch(err => next(err));
 });
+
+app.use(errorMiddleware);
 
 app.listen(process.env.PORT, () => {
   // eslint-disable-next-line no-console
