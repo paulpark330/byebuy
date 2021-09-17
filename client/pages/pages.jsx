@@ -14,7 +14,7 @@ import Search from './search';
 export default function Pages() {
   const { username } = useContext(AppContext);
 
-  if (!username) return <Redirect to="/auth/sign-in" />;
+  if (!username) return <Redirect to="/auth" />;
   return (
     <div>
       <Route exact path="/">

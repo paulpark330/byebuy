@@ -90,7 +90,7 @@ function App() {
     return (
       <div>
           <Pages />
-        <Route path="/auth/sign-in">
+        <Route path="/auth">
           {!username
             ? (
             <div>
