@@ -1,3 +1,10 @@
 ::-webkit-scrollbar {
   display: none;
 }
+
+.App {
+    font-family: 'Roboto', sans-serif;
+    Text-align: center;
+    height: 100vh;
+    width: 100vw;
+}
