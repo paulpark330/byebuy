@@ -70,7 +70,7 @@ function useQuery() {
 }
 
 export default function Details() {
-  const { setPageTitle } = useContext(AppContext);
+  const { setPageTitle, userId } = useContext(AppContext);
   const classes = useStyles();
   const query = useQuery();
   const history = useHistory();
@@ -91,6 +91,26 @@ export default function Details() {
         setpost(post);
       });
   }, []);
+
+  const openChat = () => {
+    console.log(userId.toString(), post.userId.toString());
+    const init = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Api-Token': process.env.API_TOKEN
+      },
+      body: JSON.stringify({
+        user_ids: [userId.toString(), post.userId.toString()]
+      })
+    };
+    fetch(`https://api-${process.env.APP_ID}.sendbird.com/v3/group_channels`, init)
+      .then(res => res.json())
+      .then(result => {
+        console.log(result);
+        history.push('/chat');
+      });
+  };
 
   return (
     <div>
@@ -131,6 +151,7 @@ export default function Details() {
               variant="contained"
               color="primary"
               style={{ color: 'white' }}
+              onClick={openChat}
             >
               Chat
             </Button>

@@ -6,26 +6,68 @@ import {
   ChannelList,
   Channel
 } from 'sendbird-uikit';
+import { makeStyles } from '@material-ui/core';
 import AppContext from '../lib/app-context';
+
+const useStyles = makeStyles(theme => {
+  return {
+    channelList: {
+      display: 'flex',
+      justifyContent: 'center',
+      height: '80vh'
+    }
+  };
+});
 
 export default function Chat() {
   const { username, userId } = useContext(AppContext);
-
   const { setPageTitle } = useContext(AppContext);
+  const classes = useStyles();
   useEffect(() => {
     setPageTitle('Chat');
   }, []);
 
-  const appId = 'ADE84D52-B56A-457C-9E88-47B8737C4DF5';
-  const nickname = username;
+  const MyCustomPreview = ({ channel, onLeaveChannel }) => (
+    <div style={{ border: '1px solid gray' }}>
+      <img height="20px" width="20px" src={channel.coverUrl} />
+      <button
+        onClick={() => {
+          const callback = () => {
+            console.warn('Leave channel success');
+          };
+          onLeaveChannel(channel, callback);
+        }}
+      >
+        {' '}
+        Leave
+      </button>
+    </div>
+  );
 
   return (
     <div>
-      <SendBirdApp
-        appId={appId}
+      <SendBirdProvider
+        appId={process.env.APP_ID}
         userId={userId.toString()}
-        nickname={nickname}
-      />
+        nickname={username}
+      >
+        <div className="App">
+          <SendBirdApp
+            appId={process.env.APP_ID}
+            userId={userId.toString()}
+            nickname={username}
+          >
+            {/* <div className={classes.channelList}>
+            <ChannelList
+              renderChannelPreview={MyCustomPreview}
+              onChannelSelect={channel => {
+                console.warn(channel);
+              }}
+            />
+          </div> */}
+          </SendBirdApp>
+        </div>
+      </SendBirdProvider>
     </div>
   );
 }
