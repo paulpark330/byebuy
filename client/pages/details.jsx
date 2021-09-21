@@ -61,7 +61,6 @@ const useStyles = makeStyles(theme => {
     arrowBack: {
       fontSize: 40
     }
-
   };
 });
 
@@ -70,7 +69,7 @@ function useQuery() {
 }
 
 export default function Details() {
-  const { setPageTitle, userId } = useContext(AppContext);
+  const { setPageTitle, userId, username } = useContext(AppContext);
   const classes = useStyles();
   const query = useQuery();
   const history = useHistory();
@@ -93,29 +92,95 @@ export default function Details() {
   }, []);
 
   const openChat = () => {
-    console.log(userId.toString(), post.userId.toString());
-    const init = {
+    let init = {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Api-Token': process.env.API_TOKEN
       },
       body: JSON.stringify({
-        user_ids: [userId.toString(), post.userId.toString()]
+        name: post.nickname,
+        user_ids: [userId.toString(), post.userId.toString(), '218763'],
+        is_distinct: false,
+        inviter_id: userId.toString(),
+        cover_url: post.url !== null ? post.url : '/images/null.png'
       })
     };
-    fetch(`https://api-${process.env.APP_ID}.sendbird.com/v3/group_channels`, init)
+    fetch(
+      `https://api-${process.env.APP_ID}.sendbird.com/v3/group_channels`,
+      init
+    )
       .then(res => res.json())
       .then(result => {
-        console.log(result);
-        history.push('/chat');
+        init = {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Access-Token': window.localStorage.getItem('react-context-jwt')
+          },
+          body: JSON.stringify({
+            channel_url: result.channel_url,
+            buyerId: userId,
+            sellerId: post.userId,
+            postId: post.postId
+          })
+        };
+        Promise.all([
+          fetch('/api/chats', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-Access-Token':
+                window.localStorage.getItem('react-context-jwt')
+            },
+            body: JSON.stringify({
+              channel_url: result.channel_url,
+              buyerId: userId,
+              sellerId: post.userId,
+              postId: post.postId
+            })
+          }),
+          fetch(
+            `https://api-${process.env.APP_ID}.sendbird.com/v3/group_channels/${result.channel_url}/messages`,
+            {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Api-Token': process.env.API_TOKEN
+              },
+              body: JSON.stringify({
+                message_type: 'ADMM',
+                user_id: '218763',
+                message: `${username} has joined`
+              })
+            }
+          ),
+          fetch('/api/chats', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-Access-Token':
+                window.localStorage.getItem('react-context-jwt')
+            },
+            body: JSON.stringify({
+              channel_url: result.channel_url,
+              buyerId: userId,
+              sellerId: post.userId,
+              postId: post.postId
+            })
+          })
+        ])
+          .then(history.push('/chat'));
       });
   };
 
   return (
     <div>
       <Card elevation={1} className={classes.root}>
-        <IconButton className={classes.iconButton} onClick={() => history.goBack()}>
+        <IconButton
+          className={classes.iconButton}
+          onClick={() => history.goBack()}
+        >
           <ArrowBack className={classes.arrowBack} />
         </IconButton>
         <CardMedia

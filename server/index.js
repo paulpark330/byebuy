@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 require('dotenv/config');
 const express = require('express');
 const errorMiddleware = require('./error-middleware');
@@ -22,37 +23,6 @@ const app = express();
 app.use(jsonMiddleware);
 
 app.use(staticMiddleware);
-
-app.post('/api/new-post', uploadsMiddleware, (req, res, next) => {
-  const { userId, title, category, price, description, location } = req.body;
-  if (!title || !category) {
-    throw new ClientError(
-      400,
-      'title (string), category (string), and price (number) are required fields'
-    );
-  }
-  let url = null;
-  if (req.file) {
-    url = `/images/${req.file.filename}`;
-  }
-  const sql = `
-    with "insertedPost" as (
-      insert into "posts" ("userId", "title", "category", "price", "description", "location")
-        values ($1, $2, $3, $4, $5, $6)
-      returning *
-    )
-    insert into "pictures" ("postId", "url")
-      values ((select "postId" from "insertedPost"), $7)
-    returning *
-  `;
-  const params = [userId, title, category, price, description, location, url];
-  db.query(sql, params)
-    .then(result => {
-      const [newPost] = result.rows;
-      res.status(201).json(newPost);
-    })
-    .catch(err => next(err));
-});
 
 app.post('/api/auth/sign-up', uploadsMiddleware, (req, res, next) => {
   const { username, password } = req.body;
@@ -134,6 +104,37 @@ app.get('/api/home', (req, res, next) => {
     .catch(err => next(err));
 });
 
+app.post('/api/new-post', uploadsMiddleware, (req, res, next) => {
+  const { userId, title, category, price, description, location } = req.body;
+  if (!title || !category) {
+    throw new ClientError(
+      400,
+      'title (string), category (string), and price (number) are required fields'
+    );
+  }
+  let url = null;
+  if (req.file) {
+    url = `/images/${req.file.filename}`;
+  }
+  const sql = `
+    with "insertedPost" as (
+      insert into "posts" ("userId", "title", "category", "price", "description", "location")
+        values ($1, $2, $3, $4, $5, $6)
+      returning *
+    )
+    insert into "pictures" ("postId", "url")
+      values ((select "postId" from "insertedPost"), $7)
+    returning *
+  `;
+  const params = [userId, title, category, price, description, location, url];
+  db.query(sql, params)
+    .then(result => {
+      const [newPost] = result.rows;
+      res.status(201).json(newPost);
+    })
+    .catch(err => next(err));
+});
+
 app.get('/api/search', (req, res, next) => {
   const search = req.query.input;
   const sql = `
@@ -173,6 +174,22 @@ app.get('/api/post/:postId', (req, res, next) => {
     .then(result => {
       const [post] = result.rows;
       res.status(200).json(post);
+    })
+    .catch(err => next(err));
+});
+
+app.post('/api/chats', (req, res, next) => {
+  const { channel_url, buyerId, sellerId, postId } = req.body;
+  const sql = `
+  insert into "chats" ("channel_url", "buyerId", "sellerId", "postId")
+    values ($1, $2, $3, $4)
+  returning *
+  `;
+  const params = [channel_url, buyerId, sellerId, postId];
+  db.query(sql, params)
+    .then(result => {
+      const [newChat] = result.rows;
+      res.status(201).json(newChat);
     })
     .catch(err => next(err));
 });

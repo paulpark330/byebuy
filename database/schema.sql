@@ -37,6 +37,9 @@ CREATE TABLE "public"."users" (
 
 CREATE TABLE "public"."chats" (
 	"channel_url" TEXT NOT NULL,
+  "buyerId" serial NOT NULL,
+  "sellerId" serial NOT NULL,
+  "postId" serial NOT NULL,
 	"createdAt" timestamptz(6) not null default now(),
 	CONSTRAINT "chats_pk" PRIMARY KEY ("channel_url")
 ) WITH (

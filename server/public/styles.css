@@ -2,9 +2,22 @@
   display: none;
 }
 
-.App {
-    font-family: 'Roboto', sans-serif;
-    Text-align: center;
-    height: 80vh;
-    width: 100vw;
+.customized-app {
+  font-family: 'Roboto', sans-serif;
+  height: 80vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+}
+
+.sendbird-channel-header__right-icon {
+  display: none;
+}
+
+.sendbird-channel-list__header {
+  display: none;
+}
+
+.sendbird-channel-preview__content__upper__header__total-members {
+  display: none;
 }
