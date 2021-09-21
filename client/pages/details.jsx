@@ -126,20 +126,6 @@ export default function Details() {
           })
         };
         Promise.all([
-          fetch('/api/chats', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'X-Access-Token':
-                window.localStorage.getItem('react-context-jwt')
-            },
-            body: JSON.stringify({
-              channel_url: result.channel_url,
-              buyerId: userId,
-              sellerId: post.userId,
-              postId: post.postId
-            })
-          }),
           fetch(
             `https://api-${process.env.APP_ID}.sendbird.com/v3/group_channels/${result.channel_url}/messages`,
             {
