@@ -8,6 +8,7 @@ const uploadsMiddleware = require('./uploads-middleware');
 const argon2 = require('argon2');
 const jsonMiddleware = express.json();
 const jwt = require('jsonwebtoken');
+const path = require('path');
 const authorizationMiddleware = require('./authorization-middleware');
 
 const db = new pg.Pool({
@@ -175,6 +176,12 @@ app.get('/api/post/:postId', (req, res, next) => {
       res.status(200).json(post);
     })
     .catch(err => next(err));
+});
+
+app.use((req, res) => {
+  res.sendFile('/index.html', {
+    root: path.join(__dirname, 'public')
+  });
 });
 
 app.use(errorMiddleware);
