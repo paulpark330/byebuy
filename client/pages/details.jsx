@@ -41,7 +41,7 @@ const useStyles = makeStyles(theme => {
       marginRight: theme.spacing(2)
     },
     cover: {
-      height: '50vh',
+      height: '60vh',
       width: '100vw'
     },
     favoriteBorder: {

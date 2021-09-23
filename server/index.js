@@ -114,7 +114,7 @@ app.post('/api/new-post', uploadsMiddleware, (req, res, next) => {
   }
   let url = null;
   if (req.file) {
-    url = `/images/${req.file.filename}`;
+    url = req.file.location;
   }
   const sql = `
     with "insertedPost" as (
