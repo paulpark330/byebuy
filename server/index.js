@@ -186,7 +186,7 @@ app.use((req, res) => {
 
 app.use(errorMiddleware);
 
-app.listen(process.env.PORT, () => {
+app.listen(process.env.PORT || 3000, () => {
   // eslint-disable-next-line no-console
   console.log(`express server listening on port ${process.env.PORT}`);
 });
